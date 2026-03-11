@@ -8,7 +8,7 @@
 \contentsline {chapter}{LISTE DES FIGURES}{vii}{etoc@tocid.1}%
 \contentsline {chapter}{LISTE DES TABLEAUX}{viii}{etoc@tocid.1}%
 \contentsline {chapter}{LISTE DES SIGLES, ACRONYMES ET ABRÉVIATIONS}{ix}{etoc@tocid.1}%
-\contentsline {chapter}{INTRODUCTION GÉNÉRALE}{1}{chapter*.1}%
+\contentsline {chapter}{INTRODUCTION GÉNÉRALE}{1}{table.0.1}%
 \contentsline {chapter}{\numberline {1}CONTEXTE DE L'ÉTUDE}{2}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Introduction}{2}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Présentation de la structure d'accueil}{2}{section.1.2}%
@@ -52,10 +52,10 @@
 \contentsline {subsection}{\numberline {3.2.2}Résultats et analyse}{16}{subsection.3.2.2}%
 \contentsline {section}{\numberline {3.3}Optimisation des séquences de saut et d'allocation des démodulateurs}{16}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}Rétro-ingénierie des séquences pilotes}{16}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Nouvelles familles de séquences optimisées}{17}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.2}Nouvelles familles de séquences optimisées}{16}{subsection.3.3.2}%
 \contentsline {subsection}{\numberline {3.3.3}Stratégies d'allocation dynamique des démodulateurs}{17}{subsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.3.4}Résultats et analyse}{17}{subsection.3.3.4}%
-\contentsline {subsection}{\numberline {3.3.5}Limites de l'approche}{18}{subsection.3.3.5}%
+\contentsline {subsection}{\numberline {3.3.5}Limites de l'approche}{17}{subsection.3.3.5}%
 \contentsline {section}{\numberline {3.4}Pré-compensation Doppler pour liaisons directes vers satellite}{18}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Méthode de pré-compensation par balises Doppler}{18}{subsection.3.4.1}%
 \contentsline {subsection}{\numberline {3.4.2}Validation sur données réelles}{19}{subsection.3.4.2}%
@@ -96,26 +96,26 @@
 \contentsline {subsection}{\numberline {5.2.1}Architecture et composants fondamentaux}{38}{subsection.5.2.1}%
 \contentsline {subsection}{\numberline {5.2.2}Modélisation du canal de propagation}{38}{subsection.5.2.2}%
 \contentsline {subsection}{\numberline {5.2.3}Paramètres LR-FHSS implémentés}{41}{subsection.5.2.3}%
-\contentsline {subsection}{\numberline {5.2.4}Détection des collisions et évaluation du succès}{42}{subsection.5.2.4}%
-\contentsline {subsection}{\numberline {5.2.5}Métriques et reproductibilité}{42}{subsection.5.2.5}%
+\contentsline {subsection}{\numberline {5.2.4}Détection des collisions et évaluation du succès}{41}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}Métriques et reproductibilité}{41}{subsection.5.2.5}%
 \contentsline {subsection}{\numberline {5.2.6}Calcul de l'énergie par paquet}{42}{subsection.5.2.6}%
-\contentsline {subsection}{\numberline {5.2.7}Validation expérimentale}{43}{subsection.5.2.7}%
-\contentsline {subsubsection}{\numberline {5.2.7.1}Méthodologie de validation}{43}{subsubsection.5.2.7.1}%
+\contentsline {subsection}{\numberline {5.2.7}Validation expérimentale}{42}{subsection.5.2.7}%
+\contentsline {subsubsection}{\numberline {5.2.7.1}Méthodologie de validation}{42}{subsubsection.5.2.7.1}%
 \contentsline {subsubsection}{\numberline {5.2.7.2}Analyse comparative par DR}{43}{subsubsection.5.2.7.2}%
-\contentsline {subsubsection}{\numberline {5.2.7.3}Analyse globale et quantification des erreurs}{46}{subsubsection.5.2.7.3}%
-\contentsline {section}{\numberline {5.3}Méthodologie d'évaluation}{47}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Protocole}{47}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Métriques de performance}{48}{subsection.5.3.2}%
-\contentsline {section}{\numberline {5.4}Résultats et analyse comparative}{48}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Analyse globale des performances}{48}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Analyse de la stratégie d'adaptation du DDQN}{49}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}Analyse comparative détaillée par DR}{50}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}Analyse des performances par distance}{55}{subsection.5.4.4}%
-\contentsline {subsection}{\numberline {5.4.5}Synthèse des gains apportés par le DDQN}{58}{subsection.5.4.5}%
-\contentsline {section}{\numberline {5.5}Limites et perspectives}{58}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Limites de notre solution}{58}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Perspectives}{59}{subsection.5.5.2}%
-\contentsline {section}{\numberline {5.6}Conclusion}{60}{section.5.6}%
-\contentsline {chapter}{CONCLUSION GÉNÉRALE}{61}{chapter*.43}%
-\contentsline {chapter}{RÉFÉRENCES ET BIBLIOGRAPHIE}{62}{chapter*.43}%
-\contentsline {chapter}{TABLE DES MATIÈRES}{65}{etoc@tocid.2}%
+\contentsline {subsubsection}{\numberline {5.2.7.3}Analyse globale et quantification des erreurs}{45}{subsubsection.5.2.7.3}%
+\contentsline {section}{\numberline {5.3}Méthodologie d'évaluation}{46}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Protocole}{46}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Métriques de performance}{47}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Résultats et analyse comparative}{47}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Analyse globale des performances}{47}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Analyse de la stratégie d'adaptation du DDQN}{48}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Analyse comparative détaillée par DR}{49}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Analyse des performances par distance}{54}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}Synthèse des gains apportés par le DDQN}{57}{subsection.5.4.5}%
+\contentsline {section}{\numberline {5.5}Limites et perspectives}{57}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Limites de notre solution}{57}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Perspectives}{58}{subsection.5.5.2}%
+\contentsline {section}{\numberline {5.6}Conclusion}{59}{section.5.6}%
+\contentsline {chapter}{CONCLUSION GÉNÉRALE}{60}{section.5.6}%
+\contentsline {chapter}{RÉFÉRENCES ET BIBLIOGRAPHIE}{64}{chapter*.42}%
+\contentsline {chapter}{TABLE DES MATIÈRES}{68}{etoc@tocid.2}%

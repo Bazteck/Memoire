@@ -1,7 +1,13 @@
 % --------- INTRODUCTION GÉNÉRALE ---------
-\chapter*{\centering INTRODUCTION GÉNÉRALE}	
-\addcontentsline{toc}{chapter}{INTRODUCTION GÉNÉRALE}
-\vspace*{2cm}
+\begin{center}
+	{\Large \textbf{INTRODUCTION GÉNÉRALE}}
+\end{center}
+
+	
+\addcontentsline{toc}{chapter}{INTRODUCTION GÉNÉRALE}	
+
+
+\vspace{0.5cm}
 L'expansion massive de l'Internet des Objets (IoT) impose aux réseaux longue portée et basse consommation (LPWAN) des exigences croissantes de capacité et de fiabilité. Si LoRaWAN s'est imposé comme une référence grâce à sa modulation CSS, ses limitations en termes de passage à l'échelle et de résistance aux interférences ont motivé le développement du LR-FHSS (Long Range – Frequency Hopping Spread Spectrum). Standardisée récemment par la LoRa Alliance, cette technologie remplace les chirps par une modulation GMSK. Elle y associe un saut de fréquence intra-paquet qui fragmente les messages sur des sous-canaux ultra-étroits de 488 Hz. Elle promet une capacité réseau décuplée et une robustesse accrue, notamment pour les liaisons directes par satellite.
 
 Cependant, l'optimisation dynamique des paramètres de transmission (débit de données et puissance d'émission) face à des canaux radio variables reste un défi majeur. Les approches existantes (ADR, heuristiques) sont inadaptées aux spécificités du LR-FHSS, et aucune solution ne propose à ce jour une adaptation dynamique multi-objectifs spécifiquement conçue pour cette modulation.
