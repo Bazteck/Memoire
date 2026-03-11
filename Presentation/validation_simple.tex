@@ -1,0 +1,262 @@
+\documentclass[12pt,aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\usepackage[style=authoryear, backend=biber]{biblatex}
+\addbibresource{references.bib} 
+
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+\title{Validation du Simulateur LR-FHSS}
+\date{Février 2026}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Validation du Simulateur}
+	\centering
+	\begin{columns}[T]
+		\column{0.5\textwidth}
+		\textbf{Paramétres :}
+		\begin{itemize}
+			\item 20 825 paquets
+			\item 13 distances (139m--4000m)
+			\item 4 DR testés (DR8-DR11)
+		\end{itemize}
+	\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Scénario de Référence}
+	Les scenarios de mesure de l'etude \cite{lrfhss_comparaison}
+	\centering
+	\includegraphics[height=0.7\textheight]{images/scenario_etude.png}
+\end{frame}
+
+\begin{frame}{Modèle de Propagation - Log-Distance}
+	\centering
+	\textbf{Équation du Modèle}:
+	$$\text{PL}(d) = \text{PL}(d_0) + 10n \log_{10}\left(\frac{d}{d_0}\right) + X_\sigma$$
+	
+	\vspace{0.5cm}
+	\textbf{Paramètres du Modèle}:
+	\begin{itemize}
+		\item $n = 3.3$ (exposant de perte de propagation)
+		\item $\text{PL}(d_0) = 125$ dB (perte à distance référence $d_0 = 1$ km)
+		\item $\sigma = 7$ dB (écart-type du shadowing)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{DR8 : Robuste (CR=1/3, BW=137 kHz)}
+	\centering
+	\includegraphics[height=0.8\textheight]{images/validation/sim/dr8_pdr_rssi_vs_distance.png}
+	
+	\textit{Validation du simulateur : RMSE PDR 7,23\%, RSSI 7,37 dB}
+\end{frame}
+
+\begin{frame}{DR9 : Sensibilité Accrue (CR=2/3, BW=137 kHz)}
+	\centering
+	\includegraphics[height=0.8\textheight]{images/validation/sim/dr9_pdr_rssi_vs_distance.png}
+	
+	\textit{Performance dégradée : RMSE PDR 15,43\%, modèle BER à affiner}
+\end{frame}
+
+\begin{frame}{DR10 : Large Bande Robuste (CR=1/3, BW=336 kHz)}
+	\centering
+	\includegraphics[height=0.8\textheight]{images/validation/sim/dr10_pdr_rssi_vs_distance.png}
+	
+	\textit{Meilleur accord : RMSE PDR 2,93\%, validation excellente}
+\end{frame}
+
+\begin{frame}{DR11 : Fragile (CR=2/3, BW=336 kHz)}
+	\centering
+	\includegraphics[height=0.7\textheight]{images/validation/sim/dr11_pdr_rssi_vs_distance.png}\\
+	\textit{Limitation aux très faibles SNR : RMSE PDR 8,37\%}
+\end{frame}
+
+\begin{frame}
+	\centering
+    	\includegraphics[height=0.8\textheight]{images/validation/sim/all_dr_pdr_vs_distance.png}\\
+	\textit{PDR en fonction de la distance pour tous les DR}
+\end{frame}
+
+\begin{frame}
+	\centering
+    	\includegraphics[height=0.8\textheight]{images/validation/sim/all_dr_rssi_vs_distance.png} \\
+	\textit{RSSI en fonction de la distance pour tous les DR}
+\end{frame}
+
+\begin{frame}[fragile]{Validation - Récapitulatif par Data Rate}
+	\centering
+	\textbf{Erreurs de validation (Simulation vs Mesures réelles)}:
+	
+	\vspace{0.2cm}
+	\begin{tabular}{|c|r|r|}
+		\hline
+		\textbf{Data Rate} & \textbf{RMSE PDR} & \textbf{RMSE RSSI} \\
+		\hline
+		DR8 (CR=1/3, 137 kHz) & 7,23\% & 7,37 dB \\
+		\hline
+		DR9 (CR=2/3, 137 kHz) & 15,43\% & 6,63 dB \\
+		\hline
+		DR10 (CR=1/3, 336 kHz) & 2,93\% & 6,96 dB \\
+		\hline
+		DR11 (CR=2/3, 336 kHz) & 8,37\% & 6,15 dB \\
+		\hline
+		\textbf{Moyenne} & \textbf{8,49\%} & \textbf{6,78 dB} \\
+		\hline
+	\end{tabular}
+	
+	\vspace{0.3cm}
+	\textit{Meilleur accord : DR10 (2,93\%) | Accordsatisfaisant : DR8 (7,23\%) | À affiner : DR9 (15,43\%)}
+\end{frame}
+
+
+\begin{frame}{Comparaison Globale : Standard vs DDQN}
+	\centering
+    	\includegraphics[height=0.8\textheight]{images/validation/ddqn/comparison_by_dr_with_ddqn.png}
+		\\
+	\textit{Performance relative par Data Rate}
+\end{frame}
+
+
+
+\begin{frame}{PDR : Réel vs Standard vs DDQN}
+	\centering
+    	\includegraphics[height=0.8\textheight]{images/validation/ddqn/comparison_pdr_real_standard_ddqn.png}\\
+\end{frame}
+
+\begin{frame}{Consommation Énergétique}
+	\centering
+    	\includegraphics[height=0.8\textheight]{images/validation/ddqn/energy_comparison_standard_vs_ddqn.png}\\
+	\textit{DDQN réduit l'énergie aux courtes distances}
+\end{frame}
+
+\begin{frame}{PDR - Résultats DDQN}
+	\centering
+	\includegraphics[height=0.8\textheight]{images/validation/ddqn/pdr_by_distance.png}\\
+
+\end{frame}
+
+
+
+\begin{frame}{Optimisation DDQN - Résultats Globaux}
+	\centering
+	\begin{columns}[T]
+		\column{0.5\textwidth}
+		\textbf{Comparaison DDQN vs Standard}:
+		\begin{itemize}
+			\item Gain PDR moyen : +3,20\%
+			\item Gain PDR max : +14,73\%
+		\end{itemize}
+
+		\column{0.5\textwidth}
+		\textbf{Efficacité énergétique}:
+		\begin{itemize}
+			\item Réduction énergie : -4,36 J
+			\item Pourcentage : -5,68\%
+			\item Adaptation puissance efficace
+			\item Bénéfice surtout courtes distances
+		\end{itemize}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Synthèse - PDR par Distance}
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\tiny
+		\textbf{Distance (m)} & \textbf{PDR Standard (\%)} & \textbf{PDR DDQN (\%)} & \textbf{Variation (\%)} \\
+		\hline
+		139  & 99,9 & 100,0 & +0,1 \\
+		331  & 99,7 & 99,0  & -0,7 \\
+		775  & 99,2 & 99,0  & -0,2 \\
+		1015 & 98,7 & 99,0  & +0,3 \\
+		1194 & 97,1 & 97,7  & +0,6 \\
+		1260 & 97,5 & 98,3  & +0,8 \\
+		1300 & 98,6 & 98,8  & +0,2 \\
+		1753 & 95,7 & 99,2  & +3,5 \\
+		1977 & 89,1 & 92,0  & +2,9 \\
+		2000 & 97,1 & 97,2  & +0,1 \\
+		2816 & 72,6 & 78,4  & +5,8 \\
+		3000 & 87,7 & 93,2  & +5,5 \\
+		4000 & 72,4 & 83,7  & +11,3 \\
+		\hline
+		\textbf{Moyenne} & \textbf{92,7} & \textbf{95,0} & \textbf{+2,3} \\
+		\hline
+	\end{tabular}
+	
+	\vspace{0.3cm}
+	Amélioration PDR moyenne : +2,3\% | Gain maximum : +11,3\% à 4000m
+\end{frame}
+
+\begin{frame}[fragile]{Synthèse - Puissance d’émission par Distance}
+	\centering
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			\textbf{Distance (m)} & \textbf{Puiss. Standard (dBm)} & \textbf{Puiss. DDQN (dBm)} & \textbf{Réduction (\%)} \\
+			\hline
+			139  & 14,0 & 3,0  & 78,6 \% \\
+			331  & 14,0 & 3,1  & 77,9 \% \\
+			775  & 14,0 & 7,6  & 45,7 \% \\
+			1015 & 14,0 & 11,1 & 20,7 \% \\
+			1194 & 14,0 & 11,9 & 15,0 \% \\
+			1260 & 14,0 & 12,0 & 14,3 \% \\
+			1300 & 14,0 & 12,0 & 14,3 \% \\
+			1753 & 14,0 & 12,0 & 14,3 \% \\
+			1977 & 14,0 & 12,0 & 14,3 \% \\
+			2000 & 14,0 & 12,0 & 14,3 \% \\
+			2816 & 14,0 & 12,0 & 14,3 \% \\
+			3000 & 14,0 & 12,0 & 14,3 \% \\
+			4000 & 14,0 & 14,0 & 0,0 \% \\
+			\hline
+			\textbf{Moyenne} & \textbf{14,0} & \textbf{9,5} & \textbf{32,0 \%} \\
+			\hline
+		\end{tabular}
+	\end{table}
+\end{frame}
+
+\begin{frame}[fragile]{Synthèse - Énergie par Distance}
+	\centering
+\begin{tabular}{|c|c|c|c|}
+	\hline
+	\textbf{Distance (m)} & \textbf{Énergie Std (mJ)} & \textbf{Énergie DDQN (mJ)} & \textbf{Variation (\%)} \\
+	\hline
+	139  & 76,88 & 28,81  & -62,5 \% \\
+	331  & 76,92 & 29,62  & -61,5 \% \\
+	775  & 76,95 & 61,65  & -19,9 \% \\
+	1015 & 76,91 & 77,14  & +0,3 \% \\
+	1194 & 76,95 & 81,73  & +6,2 \% \\
+	1260 & 76,98 & 82,51  & +7,2 \% \\
+	1300 & 76,93 & 82,51  & +7,3 \% \\
+	1753 & 76,86 & 82,51  & +7,3 \% \\
+	1977 & 76,86 & 82,51  & +7,3 \% \\
+	2000 & 76,88 & 82,51  & +7,3 \% \\
+	2816 & 76,85 & 82,51  & +7,4 \% \\
+	3000 & 77,00 & 82,54  & +7,2 \% \\
+	4000 & 77,05 & 94,29  & +22,4 \% \\
+	\hline
+	\textbf{Moyenne} & \textbf{76,93} & \textbf{73,14} & \textbf{-4,9 \%} \\
+	\hline
+\end{tabular}
+	
+	\vspace{0.3cm}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\printbibliography
+\end{frame}
+\end{document}

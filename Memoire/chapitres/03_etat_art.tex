@@ -1,0 +1,233 @@
+%% ============================================================================
+%% CHAPITRE 3 : ÉTAT DE L'ART SUR L'OPTIMISATION DES PERFORMANCES DU LR-FHSS
+%% ============================================================================
+\chapter{ÉTAT DE L'ART SUR L'OPTIMISATION DES PERFORMANCES DU LR-FHSS}
+\label{chap3}
+
+\section{Introduction}
+Le \gls{lrfhss} constitue une avancée majeure pour l'IoT satellitaire et les réseaux terrestres à très haute densité. Pourtant, plusieurs verrous limitent encore son plein potentiel : perte des en-têtes de trames, sensibilité à l'effet Doppler, rareté des ressources de démodulation à bord des passerelles, et absence de mécanismes d'adaptation dynamique aux conditions du canal.
+
+Dans ce chapitre, nous analysons les travaux d'optimisation du LR-FHSS selon une approche critique. Pour chaque article, nous abordons le contexte, la problématique, la solution apportée et les résultats obtenus, avant d'en identifier les limites.
+
+% ============================================================================
+% ARTICLE 1 : RÉCEPTEUR AMÉLIORÉ ET DÉCODAGE SANS EN-TÊTE
+% ============================================================================
+
+\section{Récepteur LR-FHSS amélioré}
+
+Les récepteurs LR-FHSS conventionnels nécessitent qu'au moins une réplique de l'en-tête soit bien reçue pour décoder un paquet. Dans les environnements denses, terrestres ou satellitaires, les collisions sur les en-têtes deviennent le principal facteur limitant les performances. La problématique centrale est donc de récupérer des trames LR-FHSS dont tous les en-têtes sont perdus, tout en prenant en compte les effets \textit{Doppler} caractéristiques des liaisons satellite.
+
+\subsection{Architecture de récepteur augmenté}
+
+Les auteurs de l'étude \cite{maldonado2025headerless} proposent la première architecture de récepteur capable de décoder des trames sans en-tête. Leur contribution repose sur trois éléments clés :
+
+\begin{itemize}
+	\item \textbf{Modélisation réaliste du canal spatial :} Intégration des effets Doppler spécifiques aux satellites en orbite basse terrestre (LEO), avec une modélisation précise du décalage en fréquence et de sa variation temporelle.
+	
+	\item \textbf{Algorithme glouton temps-fréquence :} Un algorithme de recherche exhaustive qui explore simultanément les dimensions temporelles, fréquentielles et les séquences de saut (FHS) pour localiser les fragments orphelins dans la matrice de réception $\mathcal{M}_N$.
+	
+	\item \textbf{Traitement différentiel :} Des modules de soustraction des trames déjà décodées ($\mathcal{M}_S$) de la matrice originale, isolant ainsi les fragments sans en-tête ($\mathcal{M}_C$), suivis d'un décodage exhaustif pour les deux taux de codage (CR1/3 et CR2/3).
+\end{itemize}
+
+\subsection{Résultats et analyse}
+
+Les simulations montrent de bons résultats :
+
+\begin{itemize}
+	\item \textbf{Gain de 50\% du taux de paquets décodés} en contexte terrestre et spatial par rapport à un récepteur conventionnel.
+	\item Le \textit{Doppler} agit comme un discriminant naturel : dans le scénario spatial, la dimension fréquentielle supplémentaire permet à l'algorithme de localisation d'atteindre un score F1 proche de 1 jusqu'à 800 transmissions simultanées.
+	\item \textbf{Estimation fiable des trames sans en-tête jusqu'à 60\% d'occupation du canal}, au-delà de laquelle les faux positifs commencent à dégrader les performances.
+\end{itemize}
+
+
+Malgré son efficacité, cette approche peut présenter une limitation importante : la nécessité de modifier profondément l'architecture du récepteur (passerelle ou satellite), ce qui est complexe à déployer à grande échelle.
+
+% ============================================================================
+% ARTICLE 2 : SÉQUENCES DE SAUT ET ALLOCATION DE DÉMODULATEURS
+% ============================================================================
+\section{Optimisation des séquences de saut et d'allocation des démodulateurs}
+
+La scalabilité du LR-FHSS repose fondamentalement sur deux éléments : les séquences de saut de fréquence (FHS), qui déterminent comment les fragments se répartissent sur le spectre, et les démodulateurs, ressources limitées à bord des passerelles. La problématique consiste à améliorer la capacité réseau en optimisant conjointement ces deux aspects.
+
+\subsection{Rétro-ingénierie des séquences pilotes}
+
+Les auteurs de l'étude \cite{maldonado2025enhancing} ont réalisé un travail de rétro-ingénierie des FHS utilisées dans les pilotes des modules LR-FHSS, révélant des informations cruciales :
+
+\begin{itemize}
+	\item Contrairement aux hypothèses de travaux antérieurs qui supposaient des séquences pseudo-aléatoires ou issues de fonctions de hachage \cite{lr_fhss_overview}, les FHS sont en réalité construites à partir de registres à décalage à rétroaction linéaire (LFSR) \cite{lfsr} produisant des \textit{m-séquences}.
+	\item Les familles de séquences ainsi générées sont limitées à 384 dans les configurations standards, ce qui constitue un goulot d'étranglement potentiel.
+	\item Les auteurs ont publié un outil open-source permettant de générer ces séquences, facilitant ainsi leur analyse et leur amélioration par la communauté.
+\end{itemize}
+
+\subsection{Nouvelles familles de séquences optimisées}
+
+Avec cette compréhension approfondie, les auteurs proposent de nouvelles familles de FHS optimisées pour le LR-FHSS :
+
+\begin{itemize}
+	\item \textbf{Familles Lempel-Greenberger :} Basées sur les constructions optimales de corrélation de \textit{Hamming}, générant 32 à 64 séquences de longueur 31.
+	\item \textbf{Familles Li-Fan (Wide-Gap sequences) :} Conçues pour garantir un écart minimal entre les sauts de fréquence successifs, en conformité avec les régulations (écart de 3,9 kHz en Europe). Ces familles, construites selon les méthodes $2\ell$ et $3\ell$, produisent entre 18 et 107 séquences adaptées aux contraintes du LR-FHSS.
+\end{itemize}
+
+\subsection{Stratégies d'allocation dynamique des démodulateurs}
+
+En complément de l'optimisation des séquences, les auteurs introduisent deux stratégies novatrices pour l'allocation des ressources de démodulation :
+
+\begin{itemize}
+	\item \textbf{Early-Decode :} Le démodulateur commence le décodage dès qu'il a collecté le nombre minimum de fragments requis (33\% pour CR1/3, 67\% pour CR2/3), au lieu d'attendre la fin de la réception de tous les fragments. Cette libération anticipée de la ressource permet de traiter plus de trames simultanément.
+	
+	\item \textbf{Early-Drop :} Si le démodulateur détecte qu'il est impossible d'atteindre le seuil de fragments nécessaires (trop de collisions déjà observées), il abandonne prématurément la réception du paquet, libérant ainsi la ressource pour d'autres trames plus prometteuses.
+\end{itemize}
+
+\subsection{Résultats et analyse}
+
+Les simulations exhaustives menées par les auteurs, avec des configurations allant de 100 à 1000 démodulateurs et différents taux de codage, produisent des résultats remarquables :
+
+\begin{itemize}
+	\item \textbf{Gain de capacité de décodage jusqu'à 100\%} avec 100 démodulateurs et l'activation conjointe des mécanismes Early-Decode/Early-Drop.
+	\item La famille \textbf{Li-Fan surpasse la famille pilote d'origine de 170\%} en configuration dense (CR2/3) avec 1000 démodulateurs.
+	\item La \textbf{tolérance aux collisions sur en-tête} (simulation d'une robustesse accrue de 4 time-slots) double les performances dans les scénarios à forte densité.
+	\item Analyse comparative détaillée montrant que la famille Li-Fan est particulièrement avantageuse pour les charges réseau élevées, tandis que la famille pilote conserve un léger avantage pour les faibles densités.
+\end{itemize}
+
+\subsection{Limites de l'approche}
+
+Ces avancées significatives présentent néanmoins des limites importantes :
+
+\begin{itemize}
+	\item L'optimisation reste fondamentalement \textbf{statique} : la conception des séquences est effectuée une fois pour toutes (\textit{offline}), indépendamment des conditions de propagation et de la densité du réseau.
+	\item Les stratégies d'allocation, bien que dynamiques dans leur exécution, suivent des règles prédéfinies qui ne s'adaptent pas aux variations du canal (ombrage, évanouissements).
+	\item La mise en œuvre effective de leur stratégie nécessitera une modification profonde des dispositifs. 
+\end{itemize}
+
+% ============================================================================
+% ARTICLE 3 : PRÉ-COMPENSATION DOPPLER CÔTÉ TERMINAL
+% ============================================================================
+\section{Pré-compensation Doppler pour liaisons directes vers satellite}
+
+L'effet Doppler constitue la principale cause de perte de synchronisation et de paquets dans les liaisons satellitaires. La question centrale est de savoir s’il est possible de compenser ce décalage de manière logicielle, sans recourir à un module GNSS (Global Navigation Satellite System) à la fois coûteux et énergivore. L'enjeu est d'y parvenir sans modification matérielle tout en garantissant un surcoût énergétique négligeable.
+
+\subsection{Méthode de pré-compensation par balises Doppler}
+
+Les auteurs de l'étude \cite{ullah_extending_doppler_2025} proposent une solution pratique : la pré-compensation via des balises Doppler (\textit{Doppler Beacons}). Leur approche se décompose en plusieurs étapes :
+
+\begin{enumerate}
+	\item \textbf{Émission continue de balises :} Le satellite émet en permanence des balises constituées d'un simple préambule LoRa (8,25 symboles minimum), sans charge utile ni CRC, sur une large bande ($B_{downlink} = 500$ kHz) garantissant une réception robuste malgré le Doppler.
+	
+	\item \textbf{Mesure du décalage :} L'équipement terrestre ouvre une fenêtre de réception (RX0) avant chaque transmission montante et utilise la fonction \gls{fei} (Frequency Error Indicator) intégrée aux puces LoRa pour mesurer précisément le décalage Doppler subi par la balise.
+	
+	\item \textbf{Pré-compensation :} L'équipement ajuste sa fréquence d'émission $f'(t)$ selon la formule :
+	\[f'(t) = f_c' + f_d(t)\left(\frac{f_c'}{f_c}\right)\]
+	où $f_c$ et $f_c'$ sont les fréquences porteuses descendante et montante, et $f_d(t)$ le décalage mesuré.
+\end{enumerate}
+
+\subsection{Validation sur données réelles}
+
+La force de cette étude réside dans sa validation à partir de données de télémétrie réelles des satellites TIANQI-7 et TIANQI-27, via la plateforme ouverte TinyGS :
+
+\begin{itemize}
+	\item \textbf{Données exploitées :} Plus de 2 millions de paquets confirmés, avec des périodes d'émission de 15 secondes, couvrant des altitudes de 518 km (TIANQI-7) et 904 km (TIANQI-27).
+	\item \textbf{Traitement :} Interpolation et extrapolation des mesures FEI discrètes pour couvrir l'intégralité de la fenêtre de visibilité satellite.
+\end{itemize}
+
+\subsection{Résultats obtenus}
+
+Les résultats démontrent l'efficacité remarquable de la méthode :
+
+\begin{itemize}
+	\item \textbf{Élimination complète des pertes dues au décalage Doppler} pour des liens montants avec des largeurs de bande étroites (31,25 kHz), sur des altitudes de 200 à 518 km et des fréquences de 401 MHz à 2 GHz.
+	\item \textbf{Surcoût énergétique marginal} de seulement 2,5\% pour l'équipement terrestre, préservant une durée de vie de batterie supérieure à 5 ans.
+	\item Analyse détaillée des paramètres optimaux : la bande passante minimale requise pour les balises varie de 43,6 kHz à 433 MHz jusqu'à 201,5 kHz en bande S (2 GHz).
+\end{itemize}
+
+\subsection{Limites de l'approche}
+
+Cette solution, bien qu'extrêmement efficace pour le problème spécifique du Doppler, présente des limites dans le cadre plus large de notre problématique :
+
+\begin{itemize}
+	\item Elle n'offre aucun mécanisme d'optimisation de la puissance d'émission ou du débit de données en fonction des conditions de propagation.
+	\item L'adaptation se limite à la compensation fréquentielle, sans considération pour la fiabilité globale ou l'efficacité énergétique.
+\end{itemize}
+
+% ============================================================================
+% ARTICLE 4 : APPROCHES PAR APPRENTISSAGE ET SAUT DE FRÉQUENCE GÉNÉRIQUE
+% ============================================================================
+\section{Optimisation par apprentissage et saut de fréquence}
+
+Les travaux récents abordent une problématique double dans l'optimisation des réseaux LoRaWAN. Celle-ci consiste, d'une part, à intégrer le saut de fréquence au sein des communications LoRa, et d'autre part, à mettre en œuvre un agent basé sur l'apprentissage par renforcement profond capable de sélectionner de manière optimale les paramètres de transmission. L'objectif commun à ces deux mécanismes est l'amélioration de l'efficacité énergétique du réseau.
+
+\subsection{Algorithmes proposés}
+
+Les études \cite{greenlora,greenlora2024} proposent deux algorithmes complémentaires :
+
+\begin{itemize}
+	\item \textbf{LoRa-DDPG-FHSS} \cite{greenlora} : Un algorithme d'ordonnancement basé sur le \textit{Deep Deterministic Policy Gradient}(DDPG) qui optimise un quadruplet (Canal, SF, TP, Time Slot) pour chaque transmission. L'agent apprend une politique minimisant l'énergie consommée tout en évitant les collisions.
+	
+	\item \textbf{DP-FH (Deterministic Policy - Frequency Hopping)} \cite{greenlora2024} : Une version améliorée qui affine la sélection des paramètres en intégrant des informations d'état plus complètes (localisation des nœuds, taille des buffers de données) et en utilisant une architecture de réseau de neurones optimisée.
+\end{itemize}
+
+\subsection{Résultats}
+
+Les simulations, réalisées avec l'outil LoRaSim, montrent des gains spectaculaires :
+
+\begin{itemize}
+	\item \textbf{Efficacité énergétique multipliée par 98} par rapport à l'algorithme heuristique FREE \cite{free}.
+	\item \textbf{Réduction du temps d'antenne de 97\%}, libérant ainsi les ressources spectrales.
+	\item \textbf{Amélioration du PDR de 42\%}, démontrant que l'optimisation énergétique ne se fait pas au détriment de la fiabilité.
+	\item \textbf{Diminution des collisions de 9\%}, grâce à une allocation plus intelligente des ressources.
+	\item Analyse détaillée de la distribution des facteurs d'étalement (SF) montrant que l'agent privilégie les SF faibles (SF7 pour 75\% des nœuds) pour minimiser l'énergie, n'utilisant les SF élevés que pour les nœuds éloignés.
+\end{itemize}
+
+\subsection{Limites et incompatibilités majeures avec le LR-FHSS}
+
+Malgré ces résultats impressionnants, ces travaux présentent des limitations fondamentales qui les rendent inapplicables directement au LR-FHSS :
+
+\begin{enumerate}
+	\item Ces travaux présentent une ambiguïté conceptuelle dans la distinction entre LoRa CSS et LR-FHSS.
+	\item \textbf{Incompatibilité des paramètres optimisés :} L'agent optimise le \textit{Spreading Factor (SF)}, paramètre central du LoRa CSS mais inexistant en LR-FHSS. Cette technologie utilise la modulation GMSK avec des débits de données fixes (DR8, DR9, DR10, DR11, etc.) dont les propriétés de robustesse sont fondamentalement différentes.
+	
+	\item \textbf{Modèle physique inadapté :} Le simulateur LoRaSim et son modèle de collision sont conçus pour la modulation CSS. Ils ne capturent pas les spécificités du LR-FHSS : structure en-têtes/fragments, probabilité de succès par fragment, effet du codage convolutionnel, et mécanisme de saut intra-paquet.
+	
+	\item \textbf{Métriques non représentatives :} Les gains annoncés, bien que spectaculaires, ne peuvent être directement transposés au contexte LR-FHSS en raison des différences fondamentales de couche physique.
+\end{enumerate}
+
+\subsection{Apport pour notre travail}
+
+Malgré ces limitations, ces travaux apportent des contributions précieuses pour notre travail :
+
+\begin{itemize}
+	\item Ils démontrent que le saut de fréquence est un levier d'optimisation puissant pour les réseaux longue portée.
+	\item Ils confirment la pertinence de l'apprentissage par renforcement profond pour l'allocation dynamique de ressources dans des environnements complexes.
+	\item Ils fournissent un cadre méthodologique (formulation MDP, conception de la récompense, architecture acteur-critique) dont nous pouvons nous inspirer.
+\end{itemize}
+
+% ============================================================================
+% SYNTHÈSE ET POSITIONNEMENT
+% ============================================================================
+\section{Synthèse critique et positionnement de nos travaux}
+Il apparaît clairement qu'aucune solution existante ne propose une optimisation dynamique, multi-objectifs (fiabilité et énergie) et spécifiquement adaptée aux mécanismes physiques du LR-FHSS. Les approches par apprentissage, bien que prometteuses, souffrent d'une incompatibilité fondamentale avec les paramètres réels du LR-FHSS.
+
+Le tableau \ref{tab:synthèse_etat_art} synthétise les approches existantes et met en évidence leurs limites respectives.
+
+\begin{table}[H]
+	\centering
+	\caption{Synthèse critique des approches d'optimisation du LR-FHSS}
+	\label{tab:synthèse_etat_art}
+	\begin{tabular}{|p{3cm}|p{4cm}|p{3cm}|p{4cm}|}
+		\hline
+		\textbf{Approche / Référence} & \textbf{Principe} & \textbf{Avantages} & \textbf{Limites} \\
+		\hline
+		Récepteur augmenté \cite{maldonado2025headerless} & Décodage de trames sans en-tête & +50\% de PDR & Modification du récepteur \\
+		\hline
+		FHS optimisées \cite{maldonado2025enhancing} & Nouvelles séquences et allocation démodulateurs & +100\% de capacité, Li-Fan +170\% & Optimisation \textit{statique} (offline) \\
+		\hline
+		Pré-compensation Doppler \cite{ullah_extending_doppler_2025} & Balises Doppler pour ajustement fréquence & Élimination des pertes Doppler, surcoût énergétique 2,5\% & Solution spécifique au seul problème Doppler \\
+		\hline
+		RL pour LoRa-FHSS \cite{greenlora,greenlora2024} & Agent DDPG pour (Canal, SF, TP, Slot) & Gains énergétiques ×98, -97\% ToA & \textbf{Incompatible avec LR-FHSS} (SF, modèle CSS) \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Notre travail se positionne pour combler cette lacune. Il reprend l'idée de l'optimisation par apprentissage profond, validée par \cite{greenlora,greenlora2024}, mais la rend applicable et pertinente pour le LR-FHSS.
+
+\section{Conclusion}
+Dans ce chapitre, nous avons présenté une revue critique de l'état de l'art sur l'optimisation du LR-FHSS. En montrant les avancées dans ce domaine, nous avons également mis en lumière les limites et imprécisions des différentes propositions et ainsi évoqué le positionnement de notre travail face à ce constat.

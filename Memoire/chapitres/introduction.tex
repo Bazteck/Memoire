@@ -1,0 +1,11 @@
+% --------- INTRODUCTION GÉNÉRALE ---------
+\chapter*{\centering INTRODUCTION GÉNÉRALE}	
+\addcontentsline{toc}{chapter}{INTRODUCTION GÉNÉRALE}
+\vspace*{2cm}
+L'expansion massive de l'Internet des Objets (IoT) impose aux réseaux longue portée et basse consommation (LPWAN) des exigences croissantes de capacité et de fiabilité. Si LoRaWAN s'est imposé comme une référence grâce à sa modulation CSS, ses limitations en termes de passage à l'échelle et de résistance aux interférences ont motivé le développement du LR-FHSS (Long Range – Frequency Hopping Spread Spectrum). Standardisée récemment par la LoRa Alliance, cette technologie remplace les chirps par une modulation GMSK. Elle y associe un saut de fréquence intra-paquet qui fragmente les messages sur des sous-canaux ultra-étroits de 488 Hz. Elle promet une capacité réseau décuplée et une robustesse accrue, notamment pour les liaisons directes par satellite.
+
+Cependant, l'optimisation dynamique des paramètres de transmission (débit de données et puissance d'émission) face à des canaux radio variables reste un défi majeur. Les approches existantes (ADR, heuristiques) sont inadaptées aux spécificités du LR-FHSS, et aucune solution ne propose à ce jour une adaptation dynamique multi-objectifs spécifiquement conçue pour cette modulation.
+
+Ce mémoire propose une stratégie d'adaptation intelligente basée sur un agent Double Deep Q-Network (DDQN) pour maximiser simultanément la fiabilité et l'efficacité énergétique des transmissions LR-FHSS. La démarche repose sur le développement d'un simulateur événementiel validé expérimentalement, la formalisation du problème en processus décisionnel de Markov (MDP), et la conception d'un agent DDQN apprenant une politique d'adaptation optimale.
+
+Le document s'articule en cinq chapitres. Le premier pose le cadre de l'étude, la problématique et la méthodologie. Le deuxième expose les fondements techniques du LR-FHSS. Le troisième propose un état de l'art critique des travaux d'optimisation existants. Le quatrième détaille la conception de l'agent DDQN et son environnement d'apprentissage. Le cinquième présente le simulateur développé, sa validation expérimentale, et les résultats comparatifs de notre approche.

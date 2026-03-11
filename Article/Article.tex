@@ -1,0 +1,605 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{cite}
+\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+	
+	\title{Dynamic Parameter Adaptation in LR-FHSS LoRaWAN Networks\\Using Deep Reinforcement Learning}
+	
+	\author{
+		\IEEEauthorblockN{Marthy Elys\'ee BAZOUM}
+		\IEEEauthorblockA{Universit\'e Nazi BONI (UNB), \\ Bobo-Dioulasso, Burkina Faso}
+		\and
+		\IEEEauthorblockN{Tiguiane YELEMOU}
+		\IEEEauthorblockA{Universit\'e Nazi BONI (UNB), \\ Bobo-Dioulasso, Burkina Faso}
+		\and
+		\IEEEauthorblockN{G\'erard CHALHOUB}
+		\IEEEauthorblockA{\textit{Universit\'e Clermont Auvergne}\\
+			Clermont-Ferrand, France}
+		\and
+		\IEEEauthorblockN{Hamadoun TALL}
+		\IEEEauthorblockA{Universit\'e Nazi BONI (UNB),\\ Bobo-Dioulasso, Burkina Faso}
+	}
+	
+	\maketitle
+	
+	% =====================
+	% ABSTRACT
+	% =====================
+	\begin{abstract}
+		The rapid expansion of the Internet of Things (IoT) requires Low-Power Wide
+		Area Networks (LPWAN) to meet growing demands for capacity and reliability.
+		LR-FHSS (Long Range -- Frequency Hopping Spread Spectrum), recently introduced
+		to extend LoRaWAN, enables massive and resilient communications, particularly
+		for direct satellite links. However, dynamically optimizing its transmission
+		parameters (Data Rate and transmit power) under varying radio channels remains
+		a major open challenge, as existing static or heuristic approaches are
+		unsuitable. This paper proposes an intelligent adaptation strategy based on a
+		Double Deep Q-Network (DDQN) agent to simultaneously maximize reliability and
+		energy efficiency of LR-FHSS transmissions. Our approach comprises three
+		contributions: (i) a high-fidelity event-driven Python simulator, rigorously
+		validated against real-world measurements (RMSE of 12.14\% for PDR and
+		6.56\,dB for RSSI); (ii) a formal Markov Decision Process (MDP) problem
+		statement with a 76-action discrete space (DR $\times$ power); and (iii) a
+		trained DDQN agent evaluated against static configurations. Results show that
+		the agent improves the average PDR by +2.48 percentage points, with gains
+		reaching +15.6\% at 4000\,m, while reducing average transmit power by 32\%
+		and energy consumption per packet by 4.9\% on average (up to 62.5\% at short
+		range).
+	\end{abstract}
+	
+	\begin{IEEEkeywords}
+		LR-FHSS, LoRaWAN, IoT, Deep Reinforcement Learning, DDQN, Adaptive
+		Transmission, Energy Efficiency, LPWAN
+	\end{IEEEkeywords}
+	
+	% =====================
+	% I. INTRODUCTION
+	% =====================
+	\section{Introduction}
+	
+	The massive expansion of the Internet of Things (IoT) places increasing demands
+	on Low-Power Wide Area Networks (LPWANs) in terms of capacity and reliability.
+	While LoRaWAN has established itself as a reference technology thanks to its
+	Chirp Spread Spectrum (CSS) modulation~\cite{Raza2017LPWANSurvey}, its
+	limitations in scalability and interference resistance motivated the development
+	of LR-FHSS (Long Range -- Frequency Hopping Spread Spectrum). Standardized by
+	the LoRa Alliance in 2020~\cite{loraalliance2020regional}, LR-FHSS replaces
+	CSS with GMSK modulation combined with intra-packet frequency hopping. It
+	fragments messages over ultra-narrow 488\,Hz sub-channels, promises a tenfold
+	increase in network capacity, and is particularly suited for direct-to-satellite
+	IoT links~\cite{ieee_lr_fhss_2021}.
+	
+	Despite these advances, the dynamic optimization of LR-FHSS transmission
+	parameters (Data Rate and transmit power) under varying channel conditions
+	remains a major open problem. Existing adaptive approaches, such as
+	ADR~\cite{Li2018ADRanalysis} or RL-based solutions like
+	LoRa-DDPG~\cite{greenlora,greenlora2024}, optimize the Spreading Factor
+	(SF)---a parameter specific to CSS modulation that does not exist in
+	LR-FHSS---and rely on the LoRaSim physical model, which does not capture
+	LR-FHSS fragment-level collision mechanics.
+	
+	This paper addresses this gap with three main contributions:
+	\begin{itemize}
+		\item A \textbf{high-fidelity event-driven simulator} that faithfully
+		implements LR-FHSS (RP002-1.0.5~\cite{loraalliance2025regional}), including
+		fragment-level collision detection and a realistic propagation model,
+		validated against experimental data~\cite{lrfhss_comparaison};
+		\item A \textbf{formal MDP problem formulation} for joint DR and transmit
+		power optimization, with a multi-objective reward function balancing
+		reliability, energy efficiency, and spectral occupancy;
+		\item A \textbf{DDQN agent} trained on the simulator and evaluated against
+		static per-DR configurations across 13 distances from 139\,m to 4000\,m.
+	\end{itemize}
+	
+	The remainder of this paper is structured as follows.
+	Section~\ref{sec:background} presents LR-FHSS technical foundations.
+	Section~\ref{sec:related} reviews related work.
+	Section~\ref{sec:system} describes the MDP formulation and DDQN design.
+	Section~\ref{sec:eval} presents results.
+	Section~\ref{sec:conclusion} concludes.
+	
+	% =====================
+	% II. LR-FHSS BACKGROUND
+	% =====================
+	\section{LR-FHSS Technical Background}
+	\label{sec:background}
+	
+	\subsection{Modulation and Architecture}
+	
+	LR-FHSS represents a fundamental departure from LoRa CSS. Instead of
+	adjusting the Spreading Factor for link robustness, it uses GMSK modulation
+	and achieves frequency diversity through intra-packet frequency hopping. Each
+	data fragment occupies a bandwidth of 488\,Hz (Occupied Bandwidth, OBW), and a
+	complete packet transmission hops across sub-channels within an Operating
+	Channel Width (OCW) of 137\,kHz or 336\,kHz~\cite{semtech2022lrfhss}. This
+	approach reduces collision probability in dense networks and improves resilience
+	to narrowband interference.
+	
+	\subsection{Data Rate Configurations}
+	
+	For the EU868 band, the LoRa Alliance specification~\cite{loraalliance2025regional}
+	defines four LR-FHSS Data Rates (DR8--DR11), detailed in Table~\ref{tab:dr_config}.
+	Configurations with Coding Rate CR~1/3 (DR8, DR10) prioritize robustness at the
+	cost of throughput, while CR~2/3 (DR9, DR11) doubles the useful bit rate with
+	less error protection. The wider OCW of DR10/DR11 (336\,kHz) provides 688
+	available sub-channels vs. 280 for DR8/DR9, improving anti-collision capacity.
+	
+	\begin{table}[!t]
+		\centering
+		\caption{LR-FHSS Data Rate Configurations (EU868)}
+		\label{tab:dr_config}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{DR} & \textbf{OCW (kHz)} & \textbf{CR} & \textbf{Channels} & \textbf{Rate (bps)} \\
+			\hline
+			DR8  & 137 & 1/3 & 280 & 162 \\
+			DR9  & 137 & 2/3 & 280 & 325 \\
+			DR10 & 336 & 1/3 & 688 & 162 \\
+			DR11 & 336 & 2/3 & 688 & 325 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\subsection{Time-on-Air}
+	
+	The total Time-on-Air (ToA) for a packet with payload length $L$ bytes is:
+	\begin{equation}
+		T_{\text{air}} = N_h \times 233.472\,\text{ms}
+		+ \left\lceil \frac{N_{\text{bits}}}{48} \right\rceil \times 102.4\,\text{ms}
+		\label{eq:toa}
+	\end{equation}
+	where $N_h = 3$ for CR 1/3 and $N_h = 2$ for CR 2/3, and $N_{\text{bits}}$ is
+	the total number of coded bits after convolution coding.
+	
+	% =====================
+	% III. RELATED WORK
+	% =====================
+	\section{Related Work}
+	\label{sec:related}
+	
+	\textbf{Receiver-level optimization.}
+	Maldonado et al.~\cite{maldonado2025headerless} propose a receiver capable of
+	decoding LR-FHSS frames with all headers lost, achieving a 50\% gain in
+	decoded packet rate. This requires significant gateway hardware modification
+	and does not address dynamic parameter adaptation.
+	
+	\textbf{FHS and demodulator optimization.}
+	The same group~\cite{maldonado2025enhancing} reverse-engineered commercial
+	LR-FHSS hopping sequences (LFSR-based m-sequences~\cite{lfsr}) and proposed
+	optimized families (Li-Fan, Lempel-Greenberger), yielding up to 100\% capacity
+	gain combined with Early-Decode/Early-Drop demodulator allocation. These
+	improvements are static (designed offline) and channel-agnostic.
+	
+	\textbf{Doppler compensation.}
+	Ullah et al.~\cite{ullah_extending_doppler_2025} present beacon-based Doppler
+	pre-compensation for satellite links, eliminating frequency-induced losses with
+	only 2.5\% energy overhead. This addresses a specific impairment but provides no
+	DR or power adaptation mechanism.
+	
+	\textbf{RL-based optimization for LoRa.}
+	Saleem et al.~\cite{greenlora,greenlora2024} apply DDPG to jointly optimize
+	(Channel, SF, TX Power, Time Slot) in LoRaWAN, reporting ×98 energy efficiency
+	gains. However, these works confuse LoRa and LR-FHSS: the optimized SF parameter
+	does not exist in LR-FHSS, and the CSS physical model is incompatible with
+	LR-FHSS fragment-level mechanics. Their results cannot be transposed to LR-FHSS.
+	
+	\textbf{Positioning.}
+	To the best of our knowledge, no existing work proposes a dynamic, multi-objective
+	optimization strategy specifically designed for the physical parameters of LR-FHSS.
+	Our work fills this gap by combining a validated LR-FHSS simulator with a DDQN
+	agent operating over LR-FHSS-compatible (DR, power) action pairs.
+	
+	% =====================
+	% IV. SYSTEM DESIGN
+	% =====================
+	\section{System Model and DDQN Design}
+	\label{sec:system}
+	
+	\subsection{MDP Formulation}
+	
+	The LR-FHSS adaptation problem is formalized as a Markov Decision Process
+	$(\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma)$~\cite{puterman1994mdp,sutton2018reinforcement},
+	where an agent located on an edge server learns a transmission policy through
+	interaction with the network simulator.
+	
+	\textbf{State space $\mathcal{S}$:}
+	The state $s_t \in \mathbb{R}^8$ encodes the channel and node context before
+	each transmission:
+	\begin{equation}
+		s_t = \bigl[d_{\text{n}},\, \overline{\text{SNR}},\, \tau_s,\, r_n,\,
+		\log(d)_n,\, t_d,\, \sigma_{\text{SNR}},\, L_n\bigr]
+	\end{equation}
+	where $d_{\text{n}}$ is the normalized distance (max 4\,km),
+	$\overline{\text{SNR}}$ the moving-average SNR over the last 3 transmissions,
+	$\tau_s$ the success rate over the last 5 attempts, $r_n$ the normalized
+	retry count, $\log(d)_n$ the log-distance (linearizing path loss),
+	$t_d$ a time-of-day factor, $\sigma_{\text{SNR}}$ link stability (inverse
+	SNR std), and $L_n$ the normalized payload size. All components are bounded
+	to $[0,1]$ or $[-1,1]$ for stable neural network training.
+	
+	\textbf{Action space $\mathcal{A}$:}
+	Each action jointly selects a Data Rate and transmit power:
+	\begin{equation}
+		\mathcal{A} = \{\text{DR8},\ldots,\text{DR11}\}
+		\times \{-4, -3, \ldots, 13, 14\}\,\text{dBm}
+	\end{equation}
+	yielding $|\mathcal{A}| = 4 \times 19 = 76$ discrete actions, encoded as
+	unique integers $a \in \{0,\ldots,75\}$.
+	
+	\textbf{Reward function $\mathcal{R}$:}
+	The reward trades off reliability against energy and spectral efficiency:
+	\begin{equation}
+		\mathcal{R} =
+		\begin{cases}
+			-200 & \text{(failure)} \\[4pt]
+			100 + \mathcal{R}_{\text{ToA}} + \mathcal{R}_{\text{pwr}}
+			+ \mathcal{R}_{\text{retry}} + \Omega & \text{(success)}
+		\end{cases}
+	\end{equation}
+	The penalty $\phi = -200$ is twice the success base $\rho = +100$, forcing the
+	agent to prioritize packet delivery. Sub-penalties are:
+	\begin{align}
+		\mathcal{R}_{\text{ToA}} &= -80 \cdot \min\!\left(\tfrac{T_{\text{air}}}{T_{\max}}, 1\right),
+		\quad T_{\max} = 3813\,\text{ms} \\
+		\mathcal{R}_{\text{pwr}} &= -50 \cdot \tfrac{P_{\text{TX}}+4}{18} \\
+		\mathcal{R}_{\text{retry}} &= -30 \cdot \tfrac{N_{\text{retry}}}{5}
+	\end{align}
+	The term $\Omega$ adds a SNR quality bonus (encouraging the ``just enough''
+	operating point, $-5 \leq \text{SNR} \leq 5$\,dB) and a DR efficiency bonus
+	(favoring CR 2/3 when the channel permits). Weight analysis confirms that
+	reliability accounts for 53.3\% of the total reward range, energy and spectral
+	efficiency for 41.4\%.
+	
+	\subsection{DDQN Architecture}
+	
+	The DDQN algorithm~\cite{mnih2015dqn,vanhasselt2016ddqn} decouples action
+	selection from evaluation to reduce overestimation bias present in vanilla DQN:
+	\begin{equation}
+		y_t = r_t + \gamma\,Q_{\theta^-}\!\!\left(s_{t+1},\,
+		\arg\max_{a'} Q_\theta(s_{t+1}, a')\right)
+	\end{equation}
+	
+	The neural network is a feedforward network with: input layer (8 neurons) $\to$
+	FC-128 (ReLU) $\to$ Dropout ($p = 0.1$) $\to$ FC-64 (ReLU) $\to$ output (76
+	linear neurons). The network has $\approx$14,000 parameters, enabling
+	millisecond-level inference on standard hardware.
+	
+	\textbf{Training.}
+	The agent is trained over 3,000 episodes of 100 steps each, with:
+	experience replay buffer (capacity 10,000),
+	batch size 64,
+	learning rate $\alpha = 10^{-4}$,
+	discount factor $\gamma = 0.99$,
+	soft target update $\tau = 0.001$,
+	$\epsilon$-greedy exploration decaying from 1.0 to 0.05 with factor 0.995.
+	At each episode, the node distance is sampled uniformly in $[0, 4]$\,km,
+	forcing the agent to learn a generalist policy. Training stabilizes around
+	episode 450, reaching an average success rate of 89\% over the final 500
+	episodes, with reward converging to $6870 \pm 2150$.
+	
+	% =====================
+	% V. EVALUATION
+	% =====================
+	\section{Evaluation Results}
+	\label{sec:eval}
+	
+	\subsection{Simulator Validation}
+	
+	The simulator was validated by comparing simulated PDR and RSSI against
+	real LR-FHSS measurements from~\cite{lrfhss_comparaison,sanchez_vital_2025_data}
+	for all four DR configurations. Simulations used $P_{\text{TX}} = 14$\,dBm, 10
+	nodes, 30-minute runs ($\approx$400 packets per configuration), with propagation
+	parameters $n = 3.3$ and $\sigma_s = 7.0$\,dB. Table~\ref{tab:validation}
+	summarizes the RMSE results.
+	
+	\begin{table}[!t]
+		\centering
+		\caption{Simulator Validation: RMSE vs.\ Real Measurements}
+		\label{tab:validation}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			\textbf{Data Rate} & \textbf{RMSE PDR (\%)} & \textbf{RMSE RSSI (dB)} \\
+			\hline
+			DR8  & 10.69 & 7.21 \\
+			DR9  & 21.40 & 6.84 \\
+			DR10 & 5.11  & 5.92 \\
+			DR11 & 11.38 & 6.28 \\
+			\hline
+			\textbf{Average} & \textbf{12.14} & \textbf{6.56} \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	The simulator correctly reproduces the performance hierarchy (DR8/DR10 $>$
+	DR9/DR11 at long range) and the characteristic PDR decay shape, validating
+	its use as a training and evaluation environment.
+	
+	\subsection{PDR Performance}
+	
+	Table~\ref{tab:pdr} compares the PDR of static configurations (mean over
+	DR8--DR11 at 14\,dBm) and the DDQN agent.
+	
+	\begin{table}[!t]
+		\centering
+		\caption{PDR Comparison: Static vs.\ DDQN Agent}
+		\label{tab:pdr}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			\textbf{Dist. (m)} & \textbf{Static (\%)} & \textbf{DDQN (\%)} & \textbf{Gain (pts)} \\
+			\hline
+			139   & 99.9 & 100.0 & +0.1 \\
+			331   & 99.7 & 99.0  & \cellcolor{red!20}$-$0.7 \\
+			775   & 99.2 & 99.0  & \cellcolor{red!20}$-$0.2 \\
+			1015  & 98.7 & 99.0  & +0.3 \\
+			1194  & 97.1 & 97.7  & +0.6 \\
+			1260  & 97.5 & 98.3  & +0.8 \\
+			1753  & 95.7 & 99.2  & +3.5 \\
+			1977  & 89.1 & 92.0  & +2.9 \\
+			2000  & 97.1 & 97.2  & +0.1 \\
+			2816  & 72.6 & 78.4  & +5.8 \\
+			3000  & 87.7 & 93.2  & +5.5 \\
+			4000  & 72.4 & 83.7  & \cellcolor{green!20}+11.3 \\
+			\hline
+			\textbf{Avg.} & \textbf{92.7} & \textbf{95.0} & \cellcolor{green!20}\textbf{+2.3} \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	The DDQN agent improves PDR in 10 out of 12 reported distances (83\%),
+	with the largest gains at long range: +11.3\,pts at 4000\,m (+15.6\%
+	relative), +5.8\,pts at 2816\,m, and +5.5\,pts at 3000\,m. Minor
+	regressions at 331\,m and 775\,m ($\leq$0.7\,pt) are negligible given
+	the already near-perfect PDR ($>$99\%) at those distances.
+	
+	\subsection{Adaptive Strategy Analysis}
+	
+	The DDQN's DR selection follows a clear distance-aware policy:
+	at distances $\leq$331\,m, DR9/DR11 (CR 2/3, high throughput) are selected
+	exclusively, yielding the maximum LR-FHSS throughput of 142.05\,bps. Beyond
+	775\,m, the agent transitions entirely to DR8/DR10 (CR 1/3, robust), dropping
+	to 89.59\,bps to preserve link reliability. This behavior is consistent with
+	optimal communication theory: exploit high-efficiency configurations when the
+	channel is favorable, and fall back to robust ones as conditions degrade.
+	
+	\subsection{Transmit Power and Energy Efficiency}
+	
+	The DDQN achieves a \textbf{32\% average transmit power reduction} (from
+	14.0\,dBm to 9.5\,dBm). Power savings are particularly dramatic at short
+	range: at 139\,m, the agent selects 3.0\,dBm (78.6\% reduction). Beyond
+	2000\,m, power stabilizes at 12.0\,dBm, and reaches 14.0\,dBm only at 4000\,m.
+	
+	Table~\ref{tab:energy} reports energy consumption per packet.
+	
+	\begin{table}[!t]
+		\centering
+		\caption{Energy Per Packet: Static vs.\ DDQN Agent}
+		\label{tab:energy}
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			\textbf{Dist. (m)} & \textbf{Static (mJ)} & \textbf{DDQN (mJ)} & \textbf{Variation} \\
+			\hline
+			139  & 76.88 & 28.81 & \cellcolor{green!20}$-$62.5\% \\
+			331  & 76.92 & 29.62 & \cellcolor{green!20}$-$61.5\% \\
+			775  & 76.95 & 61.65 & \cellcolor{green!20}$-$19.9\% \\
+			1015 & 76.91 & 77.14 & \cellcolor{red!20}+0.3\% \\
+			1977 & 76.86 & 82.51 & \cellcolor{red!20}+7.3\% \\
+			4000 & 77.05 & 94.29 & \cellcolor{red!20}+22.4\% \\
+			\hline
+			\textbf{Avg.} & \textbf{76.93} & \textbf{73.14} & \cellcolor{green!20}\textbf{$-$4.9\%} \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	The global energy saving is \textbf{4.9\%} with a maximum of \textbf{62.5\%}
+	at 139\,m. The moderate overhead at intermediate and long distances (6--22\%)
+	reflects the use of longer-ToA, robust DR configurations (DR8/DR10) required
+	to achieve the PDR improvements reported above---a deliberate trade-off
+	prioritizing reliability over raw energy consumption.
+	
+	\subsection{Global Performance Summary}
+	
+	Table~\ref{tab:summary} consolidates the key gains of our approach.
+	
+	\begin{table}[!t]
+		\centering
+		\caption{Summary of DDQN Gains over Static Configurations}
+		\label{tab:summary}
+		\begin{tabular}{|l|c|c|c|}
+			\hline
+			\textbf{Metric} & \textbf{Static} & \textbf{DDQN} & \textbf{Gain} \\
+			\hline
+			Avg.\ PDR (\%)           & 92.7  & 95.0  & \textbf{+2.48\,pts} \\
+			PDR at 4000\,m (\%)      & 72.4  & 83.7  & \textbf{+15.6\%} \\
+			Avg.\ TX power (dBm)     & 14.0  & 9.5   & \textbf{$-$32\%} \\
+			Avg.\ energy/pkt (mJ)    & 76.93 & 73.14 & \textbf{$-$4.9\%} \\
+			Min.\ energy/pkt (mJ)    & 76.88 & 28.81 & \textbf{$-$62.5\%} \\
+			Favorable distances      & 2/12  & 10/12 & \textbf{83\%} \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	% =====================
+	% VI. CONCLUSION
+	% =====================
+	\section{Conclusion}
+	\label{sec:conclusion}
+	
+	This paper presented the first deep reinforcement learning approach for the
+	dynamic adaptation of LR-FHSS transmission parameters. We developed a
+	high-fidelity LR-FHSS event-driven simulator (RMSE 12.14\% on PDR,
+	6.56\,dB on RSSI), formalized the optimization problem as a Markov Decision
+	Process with 76 discrete (DR, power) actions, and trained a DDQN agent on this
+	simulator.
+	
+	Evaluations demonstrate consistent improvements over static configurations:
+	+2.48\,pts average PDR (+15.6\% at 4\,km), 32\% transmit power reduction,
+	and 4.9\% average energy savings per packet (up to 62.5\% at short range).
+	The agent's learned policy---preferring high-throughput DR at short range and
+	switching to robust DR at long range, while minimizing transmit power---is
+	coherent with communication theory and confirms the relevance of deep
+	reinforcement learning for autonomous LR-FHSS optimization.
+	
+	Future work will address: richer channel models (multi-path fading, dynamic
+	shadowing), online learning for real-time policy adaptation, evaluation in
+	multi-node dense scenarios, and experimental deployment on physical LR-FHSS
+	hardware.
+	
+	% =====================
+	% REFERENCES
+	% =====================
+	\begin{thebibliography}{99}
+		
+		\bibitem{Raza2017LPWANSurvey}
+		U. Raza, P. Kulkarni, and M. Sooriyabandara,
+		``Low Power Wide Area Networks: An Overview,''
+		\textit{IEEE Commun. Surveys Tuts.}, vol.~19, no.~2, pp.~855--873, 2017.
+		
+		\bibitem{loraalliance2020regional}
+		LoRa Alliance, ``LoRaWAN Regional Parameters RP002-1.0.0,'' 2020.
+		
+		\bibitem{loraalliance2025regional}
+		LoRa Alliance, ``LoRaWAN Regional Parameters RP002-1.0.5,'' 2025.
+		
+		\bibitem{ieee_lr_fhss_2021}
+		C. Delgado, J. M. Sanz, C. Blondia, and J. Famaey,
+		``Towards a New Era of Massive IoT: LR-FHSS for Satellite Networks,''
+		in \textit{Proc. IEEE VTC}, 2021.
+		
+		\bibitem{Li2018ADRanalysis}
+		S. Li, U. Raza, and A. Khan,
+		``How Agile is the Adaptive Data Rate Mechanism of LoRaWAN?''
+		in \textit{Proc. IEEE ICDCS}, 2018, pp.~1360--1365.
+		
+		\bibitem{greenlora}
+		A. Saleem, B. Kantarci, and M. St-Hilaire,
+		``GreenLoRa: DDPG-based Adaptive Transmission for LoRaWAN,''
+		\textit{IEEE Internet Things J.}, vol.~10, 2023.
+		
+		\bibitem{greenlora2024}
+		A. Saleem et al., ``DP-FH: Deterministic Policy with Frequency Hopping,''
+		in \textit{Proc. IEEE WCNC}, 2024.
+		
+		\bibitem{maldonado2025headerless}
+		D. Maldonado et al.,
+		``Header-less LR-FHSS Decoding for Dense Networks,''
+		\textit{IEEE Commun. Lett.}, 2025.
+		
+		\bibitem{maldonado2025enhancing}
+		D. Maldonado et al.,
+		``Enhancing LR-FHSS via FHS Optimization and Demodulator Allocation,''
+		\textit{IEEE Trans. Wireless Commun.}, 2025.
+		
+		\bibitem{ullah_extending_doppler_2025}
+		S. Ullah et al.,
+		``Extending LR-FHSS to Direct-to-Satellite with Doppler Pre-Compensation,''
+		\textit{IEEE Internet Things J.}, 2025.
+		
+		\bibitem{lrfhss_comparaison}
+		V. Sanchez-Vital, G. Chalhoub, and A. Freitas,
+		``Experimental Comparison of LoRa and LR-FHSS,''
+		in \textit{Proc. IEEE PIMRC}, 2023.
+		
+		\bibitem{sanchez_vital_2025_data}
+		V. Sanchez-Vital, ``LR-FHSS Measurement Dataset,'' Zenodo, 2024.
+		
+		\bibitem{lr_fhss_overview}
+		O. Afisiadis, M. Cotting, A. Burg, and A. Balatsoukas-Stimming,
+		``LR-FHSS: Overview and Performance Analysis,''
+		\textit{IEEE Commun. Lett.}, vol.~26, no.~2, pp.~264--268, 2022.
+		
+		\bibitem{arxiv_lrfhss_2020}
+		N. Podevijn et al.,
+		``Analytical Study of LR-FHSS Capacity,'' \textit{arXiv:2007.02909}, 2020.
+		
+		\bibitem{lr_fhss_traces}
+		R. Eletr et al.,
+		``Analysis of LR-FHSS Real Network Traces,''
+		in \textit{Proc. EWSN}, 2023.
+		
+		\bibitem{lfsr}
+		R. Lidl and H. Niederreiter,
+		\textit{Introduction to Finite Fields and Their Applications}.
+		Cambridge Univ. Press, 1994.
+		
+		\bibitem{semtech2022lrfhss}
+		Semtech, ``AN1200.64: LR-FHSS Application Note,'' 2022.
+		
+		\bibitem{puterman1994mdp}
+		M. L. Puterman,
+		\textit{Markov Decision Processes}. Wiley, 1994.
+		
+		\bibitem{sutton2018reinforcement}
+		R. S. Sutton and A. G. Barto,
+		\textit{Reinforcement Learning: An Introduction}, 2nd~ed. MIT Press, 2018.
+		
+		\bibitem{mnih2015dqn}
+		V. Mnih et al.,
+		``Human-level control through deep reinforcement learning,''
+		\textit{Nature}, vol.~518, pp.~529--533, 2015.
+		
+		\bibitem{vanhasselt2016ddqn}
+		H. van Hasselt, A. Guez, and D. Silver,
+		``Deep Reinforcement Learning with Double Q-Learning,''
+		in \textit{Proc. AAAI}, 2016.
+		
+		\bibitem{ullah2024_energy}
+		S. Ullah et al.,
+		``Energy Characterization of LR-FHSS IoT Devices,''
+		\textit{IEEE Sensors Lett.}, 2024.
+		
+		\bibitem{SanchezVital2024EnergyLRFHSS}
+		V. Sanchez-Vital et al.,
+		``Energy Efficiency Analysis of LR-FHSS for Low-Power IoT,''
+		\textit{IEEE Internet Things J.}, 2024.
+		
+		\bibitem{rappaport2002wireless}
+		T. S. Rappaport,
+		\textit{Wireless Communications: Principles and Practice}, 2nd~ed.
+		Prentice Hall, 2002.
+		
+		\bibitem{nair2010relu}
+		V. Nair and G. E. Hinton,
+		``Rectified Linear Units Improve Restricted Boltzmann Machines,''
+		in \textit{Proc. ICML}, 2010.
+		
+		\bibitem{srivastava2014dropout}
+		N. Srivastava et al.,
+		``Dropout: A Simple Way to Prevent Overfitting,''
+		\textit{JMLR}, vol.~15, pp.~1929--1958, 2014.
+		
+		\bibitem{lr_fhss_dts}
+		G. Cochet et al.,
+		``LR-FHSS for Direct-to-Satellite IoT,''
+		in \textit{Proc. IEEE GLOBECOM}, 2022.
+		
+		\bibitem{free}
+		M. Bor, U. Roedig, T. Voigt, and J. Alonso,
+		``Do LoRa Low-Power Wide-Area Networks Scale?''
+		in \textit{Proc. ACM MSWiM}, 2016.
+		
+		\bibitem{Semtech_LR1121_Datasheet_2023}
+		Semtech, ``LR1121 Datasheet,'' 2023.
+		
+	\end{thebibliography}
+	
+\end{document}

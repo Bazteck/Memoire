@@ -1,0 +1,60 @@
+\chapter{CONTEXTE DE L'ÉTUDE}
+
+\section{Introduction}
+Dans ce chapitre, nous présentons notre structure d'accueil où nous avons été reçus pour la réalisation de cette étude.
+Après cette présentation, nous aborderons la problématique, les objectifs et les résultats attendus à la fin de ce projet. Pour terminer ce chapitre, nous détaillerons la méthodologie adoptée.
+
+\section{Présentation de la structure d'accueil}
+
+Cette recherche a été réalisée au sein du Laboratoire d'Algorithmique, de Modélisation et de Développement Informatique (LAMDI) de l'Université Nazi BONI (UNB). Le LAMDI est intégré à l'École Doctorale Sciences et Techniques (ED-ST). On y mène des activités de recherche aux niveaux master et doctorat en Mathématiques et en Informatique. 
+
+L'équipe de recherche en Réseaux Émergents et Cybersécurité (REC) du LAMDI, au sein de laquelle nous avons travaillé, développe des thématiques sur l'intelligence artificielle, l'Internet des Objets (IoT), la robotique et la domotique, ainsi que l'optimisation des communications sans fil.
+
+\section{Contexte et justification}
+
+Les réseaux \gls{lpwan} ont émergé comme des solutions privilégiées pour les applications IoT (\IoT) nécessitant une longue portée, une faible consommation énergétique et un coût réduit. Plusieurs technologies concurrentes (SigFox, TELENSA, INGENU, LoRaWAN, etc.) existent dans le domaine avec diverses applications comme la surveillance de la faune et de la flore, les villes intelligentes et les objets personnels connectés \cite{Raza2017LPWANSurvey}. LoRaWAN, avec la modulation LoRa introduite en 2015 \cite{LoRaWANv1_0_2015}, a initialement dominé ce domaine et s'est imposée comme une référence. Cependant, face à la multiplication et à la croissance des besoins, plusieurs études ont rapidement souligné les limites de cette modulation. Elle présente notamment une capacité restreinte quant au nombre de dispositifs gérés simultanément, ainsi qu'une vulnérabilité accrue aux interférences. Ces observations ont alors motivé le développement de la nouvelle technique de modulation \LRFHSS pour étendre les capacités et offrir une meilleure résilience face aux interférences. Le LR-FHSS ne vient pas remplacer LoRa, mais il constitue plutôt une évolution logique et complémentaire. Il est uniquement utilisé en liaison montante (\textit{uplink}).
+
+\section{Problématique}
+
+Les réseaux LPWAN utilisant LR-FHSS représentent une avancée majeure pour la connectivité IoT longue portée, mais ils posent plusieurs défis techniques :
+
+Les paramètres de transmission (puissance d’émission, débit de données, structure de trame LR-FHSS, canaux de saut de fréquence) interagissent de manière complexe avec le canal radio, les collisions et la densité du réseau.
+
+Les approches existantes (ADR \cite{Li2018ADRanalysis}, heuristiques ou intelligentes proposées comme LoRa-DDPG-FHSS \cite{greenlora,greenlora2024}) ne sont pas directement applicables au LR-FHSS, car elles optimisent des paramètres inexistants (comme le \textit{Spreading Factor}) ou supposent une modulation CSS, alors que LR-FHSS utilise une modulation GMSK.
+
+Face à ces limitations, il est nécessaire de proposer une solution capable de :
+
+\begin{itemize}
+	\item S'adapter aux conditions du canal et à la densité du réseau.
+	\item Optimiser simultanément la fiabilité (PDR) et l'efficacité énergétique.
+	\item Être compatible avec la structure et les paramètres physiques du LR-FHSS.
+	\item Être évaluable dans un environnement contrôlé, grâce à un simulateur reproduisant fidèlement le comportement du LR-FHSS.
+\end{itemize}
+
+Ainsi, la problématique de la présente étude peut être formulée comme suit :
+
+Comment concevoir et valider une stratégie d'adaptation basée sur un agent DDQN capable d'optimiser dynamiquement la puissance d’émission et le débit des transmissions LR-FHSS ? 
+
+Cette problématique met en évidence le caractère multi-objectif et stochastique du problème, pour lequel l'apprentissage par renforcement profond constitue une réponse adaptée.
+
+\section{Objectifs et méthodologie}
+Cette section présente les objectifs scientifiques poursuivis dans ce mémoire ainsi que la méthodologie adoptée pour les atteindre. Elle décrit d’abord les résultats visés par l’étude, puis détaille l’approche méthodologique mise en œuvre pour concevoir, entraîner et évaluer la solution proposée.
+
+\subsection{Objectifs}
+L'objectif de cette étude est de proposer et d'évaluer une stratégie d'adaptation dynamique des paramètres de transmission LR-FHSS basée sur un agent \textit{Double Deep Q-Network} (DDQN). L'accent porte sur l'optimisation simultanée de la fiabilité des communications et de l'efficacité énergétique dans des environnements dynamiques.
+
+Plus spécifiquement, trois résultats sont attendus. Premièrement, développer un simulateur LR-FHSS réaliste et identifier les paramètres contrôlables. Deuxièmement, concevoir et entraîner un agent DDQN capable d'apprendre une politique d'adaptation optimale. Troisièmement, comparer ses performances à des stratégies statiques et analyser l'applicabilité de la solution dans des scénarios réalistes.
+
+\subsection{Méthodologie}
+
+Pour atteindre ces objectifs, la méthodologie repose sur trois axes principaux. 
+
+Premièrement, une analyse de l'état de l'art sur l'optimisation du LR-FHSS permettra de définir les limites des approches existantes et d'identifier les points d'optimisation pertinents. 
+
+Deuxièmement, un simulateur LR-FHSS sera conçu pour reproduire fidèlement le canal de propagation, l'ombrage (\textit{shadowing}), les collisions et la charge du réseau. Le simulateur générera des scénarios comparables à ceux des études de référence, permettant de valider la fidélité des tendances observées. 
+
+Troisièmement, un agent DDQN sera développé pour adapter dynamiquement la puissance d’émission et le débit de données des transmissions. Il sera entraîné sur le simulateur et évalué par une analyse comparative des performances, permettant de vérifier l'efficacité de la solution face aux stratégies existantes.
+
+\section{Conclusion}
+
+Ce chapitre a établi le contexte général de notre recherche sur l'optimisation des réseaux \gls{lorawan} utilisant la couche physique LR-FHSS, en présentant d'abord le cadre général, puis en soulevant la problématique, ce qui a permis de dégager clairement les objectifs et la méthodologie à suivre pour mener à bien notre travail.

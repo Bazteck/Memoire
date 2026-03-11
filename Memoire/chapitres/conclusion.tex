@@ -1,0 +1,13 @@
+\newpage
+\chapter*{CONCLUSION GÉNÉRALE}
+\addcontentsline{toc}{chapter}{CONCLUSION GÉNÉRALE}
+
+Ce travail de recherche a été consacré à l'optimisation des transmissions \textbf{LR-FHSS} à l'aide de l'apprentissage par renforcement profond (\textit{Deep Reinforcement Learning}). Face aux défis croissants de passage à l'échelle et d'efficacité énergétique des réseaux IoT, nous avons proposé une approche dynamique capable d'adapter intelligemment les paramètres de transmission aux conditions changeantes du canal radio.
+
+La première phase de notre étude a permis la conception et la validation d'un simulateur événementiel développé en Python. En respectant rigoureusement les spécifications techniques de la norme LR-FHSS et en confrontant nos résultats à des données réelles, nous avons obtenu une erreur quadratique moyenne (RMSE) de \textbf{12,14 \%}, garantissant ainsi la fiabilité des évaluations de performances menées par la suite.
+
+L'implémentation d'un agent fondé sur l'algorithme \textbf{Double Deep Q-Network (DDQN)} a ensuite démontré la pertinence de l'intelligence artificielle face aux méthodes d'allocation statiques. Nos résultats mettent en évidence une amélioration du taux de livraison des paquets (PDR) de \textbf{2,48\%} en moyenne, tout en réalisant une réduction significative de la puissance d'émission de \textbf{32 \%}. Cette optimisation se traduit par une diminution de la consommation énergétique globale de \textbf{4,9 \%}, confirmant la viabilité de cette approche pour prolonger l'autonomie des nœuds capteurs dans des environnements contraints.
+
+Malgré ces avancées significatives, ce travail ouvre la voie à plusieurs perspectives de recherche. Une modélisation encore plus fine du canal radio pourrait être envisagée en intégrant des modèles d'évanouissement (\textit{fading}) complexes, ainsi qu'une gestion plus précise des variations temporelles de l'ombrage (\textit{shadowing}). Par ailleurs, l'inclusion du surcoût protocolaire réel et des mécanismes de retransmission permettrait d'affiner le bilan énergétique global du système.
+
+En somme, cette étude démontre que l'apprentissage par renforcement constitue un levier technologique indispensable pour l'évolution des réseaux LPWAN vers plus d'autonomie et d'efficacité spectrale. À terme, le passage de la simulation au déploiement sur des passerelles de production représentera une étape décisive pour soutenir la croissance de l'Internet des Objets.

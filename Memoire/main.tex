@@ -1,0 +1,394 @@
+\documentclass[a4paper,12pt]{report}
+% =========================
+% ==== PACKAGES DE BASE ===
+% =========================
+\usepackage[utf8]{inputenc}   % Encodage UTF-8
+\usepackage[T1]{fontenc}      % Font encoding
+\usepackage{lmodern}
+\usepackage{subcaption}  % Dans le préambule
+\usepackage[french]{babel}    % Langue française
+\usepackage{csquotes}         % Recommandé avec biblatex
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage[table]{xcolor}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+% Gestion des caractères invisibles (espace insécable)
+\DeclareUnicodeCharacter{00A0}{ }
+
+% ==================================
+% ==== CONFIGURATION GLOSSARIES ====
+% ==================================
+\usepackage[acronym, nomain, style=long, nonumberlist, automake]{glossaries-extra}
+\makeglossaries
+
+% Définition des couleurs
+\definecolor{customBlue}{HTML}{548dd4}
+
+% INCLUSION DU FICHIER DES ACRONYMES
+\input{acronyms}
+
+% Configuration du style pour avoir un tableau à deux colonnes
+\newglossarystyle{mylong}{%
+	\setglossarystyle{long}% Base sur le style long
+	\renewenvironment{theglossary}%
+	{%
+		\begin{longtable}{|>{\centering\arraybackslash}p{4cm}|p{10cm}|}%
+			\hline
+			\rowcolor{customBlue!30}%
+			\textbf{Sigle ou Abréviation} & \textbf{Signification} \\ \hline
+			\endhead
+			\hline
+			\endfoot
+			\hline
+			\endlastfoot
+		}%
+		{%
+		\end{longtable}%
+	}%
+	\renewcommand*{\glossentry}[2]{%
+		\glstarget{##1}{\glossentryname{##1}} & \glossentrydesc{##1} \\ \hline
+	}%
+}
+
+% Configuration des algorithmes
+\renewcommand{\algorithmicrequire}{\textbf{Entrée:}}
+\renewcommand{\algorithmicensure}{\textbf{Sortie:}}
+\renewcommand{\algorithmiccomment}[1]{// #1}
+
+% Définitions pour Switch/Case
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}
+\algtext*{EndSwitch}
+\algnewcommand\Case[1]{\State \algorithmiccase\ #1\textbf{:}}
+
+% Configuration des listings
+\lstset{
+	language=Python,
+	basicstyle=\ttfamily\footnotesize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!60!black},
+	stringstyle=\color{red},
+	showstringspaces=false,
+	breaklines=true,
+	frame=single,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	captionpos=b,
+	tabsize=4,
+	escapeinside={\#*}{*)},
+	literate={é}{{\mbox{\'e}}}1 {è}{{\mbox{\`e}}}1 {à}{{\mbox{\`a}}}1 {ç}{{\mbox{\c{c}}}}1 {œ}{{\mbox{\oe}}}1 {ù}{{\mbox{\`u}}}1 {É}{{\mbox{\'E}}}1 {È}{{\mbox{\`E}}}1 {À}{{\mbox{\`A}}}1 {Ç}{{\mbox{\c{C}}}}1 {Œ}{{\mbox{\OE}}}1 {Ê}{{\mbox{\^E}}}1 {ê}{{\mbox{\^e}}}1 {î}{{\mbox{\^i}}}1 {ô}{{\mbox{\^o}}}1 {û}{{\mbox{\^u}}}1 {±}{{$\pm$}}1 {≤}{{$\le$}}1,
+	columns=fullflexible
+}
+
+% =========================
+% ==== BIBLIOGRAPHIE ======
+% =========================
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+% Amélioration de la typographie et de la justification
+\usepackage{microtype} 
+
+% Autoriser la coupure de mots n'importe où si Overfull \hbox persiste
+\tolerance=9000
+\emergencystretch=2em 
+
+% =========================
+% ==== REDÉFINITION DES CHAPITRES ====
+% =========================
+\usepackage{titlesec} 
+
+\titleformat{\chapter}[block]
+{\normalfont\large\bfseries} 
+{} 
+{0pt} 
+{\MakeUppercase{Chapitre \thechapter} : \ } 
+
+\titleformat{name=\chapter, numberless}[block]
+{\normalfont\large\bfseries} 
+{} 
+{0pt} 
+{} 
+
+\titlespacing*{\chapter}
+{0pt} 
+{0pt} 
+{0pt} 
+
+% =========================
+% ==== MISE EN PAGE/STYLE ====
+% =========================
+\setlength{\parindent}{0pt}
+
+% =========================
+% ==== AUTRES PACKAGES ====
+% =========================
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{lipsum} 
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{subcaption} 
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usetikzlibrary{calc}
+
+%==========================
+%========ITEMIZE===========
+%==========================
+\usepackage{enumitem}
+
+\setlist[itemize, 1]{label=$\bullet$} 
+\setlist[itemize, 2]{label=--}
+
+% =========================
+% ==== COULEURS ===========
+% =========================
+\definecolor{customBlue}{HTML}{548dd4}
+\definecolor{customGreen}{HTML}{32CD32}
+
+% =========================
+% ==== CONFIGURATION TOC ====
+% =========================
+\usepackage{tocloft} 
+\usepackage{etoc}
+
+\setlength{\cftparskip}{-2pt} 
+\setlength{\cftbeforechapskip}{6pt} 
+\setlength{\cftbeforesecskip}{3pt}
+
+% =========================
+% ==== DOCUMENT ===========
+% =========================
+% Commandes personnalisées
+\newcommand{\LRFHSS}{LR-FHSS }
+\newcommand{\IoT}{Internet des Objets }
+\newcommand{\LPWAN}{LPWAN}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\begin{document}
+	
+	% --------- PAGE DE GARDE ---------
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture, overlay]
+			\draw[line width=1pt, color=customBlue]
+			($(current page.north west)+(1.5cm,-1.5cm)$) rectangle ($(current page.south east)+(-1.5cm,1.5cm)$);
+		\end{tikzpicture}
+		
+		\centering 
+		
+		\textbf{M}inistère de l'\textbf{E}nseignement \textbf{S}upérieur, de la \textbf{R}echerche et de l'\textbf{I}nnovation (MESRI)\\
+		\textbf{---------------}\\
+		\textbf{U}niversité \textbf{N}azi \textbf{B}ONI (UNB)\\
+		\textbf{---------------}\\
+		\textbf{É}cole \textbf{S}upérieure d'\textbf{I}nformatique (ESI)
+		
+		\begin{minipage}{0.99\textwidth}
+			\includegraphics[width=5cm]{images/logos/logo1.png}
+			\hfill
+			\includegraphics[width=5.5cm]{images/logos/logo2.png}
+		\end{minipage}
+		
+		\vspace{0.4cm}
+		{\Huge \bfseries MÉMOIRE DE MASTER}\\[0.4cm]
+		
+		{\large{Filière : Réseaux et Systèmes -- Option : Cybersécurité}}\\[0.2cm]
+		
+		{\large \color{customBlue} \bfseries THÈME :}\\[0.4cm]
+		\setlength{\fboxsep}{15pt}
+		\setlength{\fboxrule}{0.5pt}
+		
+		\fcolorbox{customBlue}{white}{%
+			\begin{minipage}{0.8\textwidth}
+				\centering
+				\bfseries
+				<<Adaptation dynamique des paramètres de transmission dans les réseaux LoRaWAN utilisant la couche physique LR-FHSS : une approche basée apprentissage par renforcement profond>>
+			\end{minipage}%
+		}
+		
+		\vspace{0.5cm}
+		
+		Présenté par :  {\bfseries Marthy Elysée BAZOUM}\\[0.3cm]
+	{\color{customBlue}{\underline {Période de stage}}} :  du $1^{er}$ août 2025 au $1^{er}$ février 2026\\[0.9cm]
+		\begin{minipage}{1\textwidth}
+			\begin{minipage}[t]{0.48\textwidth}
+				{\color{customBlue} \underline{\textbf{Directeurs de mémoire}}} \\
+				\textbf{Pr Tiguiane YELEMOU} \\
+				Enseignant-chercheur à l'École
+				Supérieure d'Informatique (ESI)\\[8pt]
+				\textbf{Pr Gérard CHALHOUB} \\
+				Professeur des Universités (HDR)\\
+				Université Clermont Auvergne
+			\end{minipage}
+			\hfill
+			\begin{minipage}[t]{0.48\textwidth}
+				{\color{customBlue} \underline{\textbf{Co-encadrant}}} \\
+				\textbf{Dr Hamadoun TALL} \\
+				Enseignant-chercheur à l'École
+				Supérieure d'Informatique (ESI)
+			\end{minipage}
+		\end{minipage}
+		
+		\vfill
+		
+		{\large Année universitaire : 2023-2024}
+		
+		\vspace*{1cm}
+	\end{titlepage}
+	
+	% --------- NUMÉROTATION ROMAINE ---------
+	\pagenumbering{roman}
+	
+	% --------- AVANT-PROPOS ---------
+	\newpage
+	\section*{\centering AVANT-PROPOS}
+	\addcontentsline{toc}{chapter}{AVANT-PROPOS}
+	L'Université Nazi BONI (UNB) est l'une des plus grandes universités publiques du Burkina Faso. Elle fut créée
+	en 1995 sous la dénomination Centre Universitaire Polytechnique de Bobo-Dioulasso (CUPB). Puis, en 1997, elle changea de statut et d’appellation pour devenir l’Université Polytechnique de Bobo-Dioulasso (UPB), avant de prendre le nom d’Université Nazi BONI (UNB) en 2017.
+	Elle se compose de huit (8) établissements d'enseignement :
+	\begin{itemize}
+		\item l'École Supérieure d'Informatique (ESI);
+		\item l'Institut Universitaire de Technologie (IUT);
+		\item l'Institut Supérieur des Sciences de la Santé (INSSA);
+		\item l'Institut de Développement Rural (IDR);
+		\item l'Unité de Formation et de Recherche en Sciences Humaines, Lettres, Arts et Média (UFR/SH-LAM);
+		\item l'Unité de Formation et de Recherche en Sciences Exactes et Appliquées (UFR/SEA);
+		\item l'Unité de Formation et de Recherche en Sciences de la Vie et de la Terre (UFR/SVT);
+		\item l'Unité de Formation et de Recherche en Sciences Juridiques, Politiques, Économiques et de Gestion (UFR/SJPEG) ;
+	\end{itemize} 
+	
+	L'ESI comprend deux (2) cycles de formation qui sont la Licence d'Informatique et le Master d'Informatique.
+	Le cycle de Master s'effectue sur deux ans et comprend les spécialités suivantes :
+	\begin{itemize}
+		\item Conception et Architecture des Réseaux (CAR) et Cybersécurité en Master Réseaux et
+		Systèmes (RS) ;
+		\item Systèmes d'Aide à la Décision (SAD) en Master Systèmes d'Information (SI).
+	\end{itemize}
+	La formation en Master Réseaux et Systèmes s'effectue sur quatre (04) semestres. Le quatrième
+	semestre constitue un stage obligatoire de recherche ou professionnel d'au moins quatre (4)
+	mois. C'est dans ce contexte que nous avons été reçus par l'Équipe de Recherche en Réseaux
+	Émergents et Cybersécurité de l'Université Nazi BONI pour un stage de recherche. 
+	Ce document présente les résultats des travaux menés.	
+	% --------- REMERCIEMENTS ---------
+	\newpage
+	\section*{\centering REMERCIEMENTS}
+	\addcontentsline{toc}{chapter}{REMERCIEMENTS}
+	
+	Au terme de ce travail, je souhaite exprimer ma profonde gratitude à toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce mémoire.\\
+	
+	Tout d'abord, je tiens à exprimer ma sincère reconnaissance au \textbf{Pr Tiguiane YELEMOU} et au \textbf{Dr Hamadoun TALL} pour avoir accepté de diriger cette recherche. Je les remercie chaleureusement pour leur encadrement constant, leur patience ainsi que pour leurs précieux conseils. Leur bienveillance et leur disponibilité ont constitué pour moi une source permanente de motivation.\\
+	
+	Ma sincère reconnaissance va également au \textbf{Pr Gérard CHALHOUB} pour sa disponibilité et son engagement dans ce travail. Ses remarques pertinentes et son regard critique ont grandement contribué à enrichir ma réflexion et à améliorer la qualité de ce mémoire.\\
+	
+	Je remercie également l'ensemble de mes enseignants de l'École Supérieure d'Informatique (ESI), qui ont contribué à ma formation et m'ont transmis leur passion pour l'informatique. Leur dévouement et la qualité de leurs enseignements resteront pour moi une source d'inspiration durable.\\
+	
+	Mes pensées les plus affectueuses vont à mes parents, à qui je dois énormément. Merci pour votre amour inconditionnel, vos sacrifices et pour m'avoir toujours encouragé à poursuivre mes rêves. Ce travail est le fruit de votre confiance et de votre soutien indéfectible.\\
+	
+	Un clin d'œil particulier à ma grande sœur \textbf{Jessica}. Merci d'avoir toujours été présente, pour tes conseils et ton soutien tout au long de ces années.\\
+	
+	Je n'oublie pas mes amis et toutes les personnes qui ont croisé ma route durant cette aventure. Vos encouragements, votre présence et votre bonne humeur ont rendu ce parcours encore plus agréable.\\
+	
+	À toutes et à tous, merci du fond du cœur.
+	
+	% --------- RÉSUMÉ & ABSTRACT ---------
+	\newpage
+	\section*{\centering RÉSUMÉ}
+	\addcontentsline{toc}{chapter}{RÉSUMÉ}
+	
+	Face à l'expansion massive de l'Internet des Objets (IoT), les réseaux longue portée et basse consommation (LPWAN) doivent répondre à des exigences croissantes de capacité et de fiabilité. La technologie \textit{Long Range - Frequency Hopping Spread Spectrum} (LR-FHSS), récemment introduite pour étendre LoRaWAN, permet des communications massives et résilientes, notamment pour les liaisons directes par satellite. Toutefois, l'optimisation dynamique de ses paramètres de transmission (débit de données et puissance d'émission) face à des canaux radio variables reste un défi majeur, les approches statiques ou heuristiques étant limitées.
+	
+	Ce mémoire propose une stratégie d'adaptation intelligente basée sur un agent Double Deep Q-Network (DDQN) pour maximiser simultanément la fiabilité et l'efficacité énergétique des transmissions LR-FHSS. La démarche s'articule autour de trois contributions principales. Premièrement, un simulateur événementiel a été développé en Python, reproduisant fidèlement les spécifications techniques du LR-FHSS  et intégrant un modèle de propagation réaliste. Ce simulateur a été validé par comparaison avec des mesures expérimentales de la littérature, affichant une erreur quadratique moyenne (RMSE) de 12,14 \% pour le taux de livraison (PDR) et de 6,56 dB pour le RSSI. Deuxièmement, le problème d'optimisation a été formalisé en un processus décisionnel de Markov (MDP), définissant un espace d'états pertinent, un ensemble d'actions (couples Data Rate/Puissance) et une fonction de récompense multi-objectifs. Troisièmement, un agent DDQN a été conçu et entraîné pour apprendre une approche d'adaptation optimale.\\
+	
+	Les évaluations montrent que l'agent DDQN surpasse nettement les configurations statiques. Il améliore le PDR moyen de +2,48\%, avec des gains atteignant +15,6 \% à longue distance (4000 m). Parallèlement, il réduit la puissance d'émission moyenne de 32 \% et la consommation énergétique par paquet de 4,9 \%, réalisant des économies allant jusqu'à 62,5 \% à courte distance. Ces résultats démontrent la pertinence de l'apprentissage par renforcement profond pour l'optimisation autonome des réseaux LR-FHSS. Cela ouvre la voie à des systèmes IoT plus fiables, plus économes en énergie et capables de s'adapter de manière dynamique à leur environnement.
+	
+	
+	\newpage
+	\section*{\centering ABSTRACT}
+	\addcontentsline{toc}{chapter}{ABSTRACT}
+
+	Facing the massive expansion of the Internet of Things (IoT), Low-Power Wide-Area Networks (LPWANs) must meet increasing demands for capacity and reliability. The Long Range - Frequency Hopping Spread Spectrum (LR-FHSS) technology, recently introduced to extend LoRaWAN, enables massive and resilient communications, particularly for direct-to-satellite links. However, the dynamic optimization of its transmission parameters (data rate and transmission power) in the face of variable radio channels remains a major challenge, as static or heuristic approaches are limited.
+
+	This thesis proposes an intelligent adaptation strategy based on a Double Deep Q-Network (DDQN) agent to simultaneously maximize the reliability and energy efficiency of LR-FHSS transmissions. The approach is structured around three main contributions. First, an event-driven simulator was developed in Python, faithfully reproducing the technical specifications of LR-FHSS and integrating a realistic propagation model. This simulator was validated by comparison with experimental measurements from the literature, showing a Root Mean Square Error (RMSE) of 12.14\% for the Packet Delivery Ratio (PDR) and 6.56 dB for the RSSI. Second, the optimization problem was formalized as a Markov Decision Process (MDP), defining a relevant state space, an action set (Data Rate/Power pairs), and a multi-objective reward function. Third, a DDQN agent was designed and trained to learn an optimal adaptation policy.
+
+	Evaluations show that the DDQN agent significantly outperforms static configurations. It improves the average PDR by +2.48\%, with gains reaching +15.6\% at long distances (4000 m). Simultaneously, it reduces the average transmission power by 32\% and the energy consumption per packet by 4.9\%, achieving savings of up to 62.5\% at short distances. These results demonstrate the relevance of deep reinforcement learning for the autonomous optimization of LR-FHSS networks, paving the way for more reliable, energy-efficient IoT systems capable of dynamically adapting to their environment.
+
+	\newpage
+	% --------- SOMMAIRE ---------
+	\cleardoublepage
+	\renewcommand{\contentsname}{SOMMAIRE} % On change le titre
+	\etocsetnexttocdepth{1}                % Profondeur limitée aux chapitres
+	\tableofcontents
+	\addcontentsline{toc}{chapter}{SOMMAIRE} 
+	\newpage
+	
+	% --------- LISTE DES FIGURES ET TABLEAUX ---------
+	\newpage
+	\listoffigures
+	\addcontentsline{toc}{chapter}{LISTE DES FIGURES}
+	
+	\newpage
+	\listoftables
+	\addcontentsline{toc}{chapter}{LISTE DES TABLEAUX}
+	
+	%----------- SIGLES ET ABRÉVIATIONS----------
+	
+	\include{sigles_et_abreviations}
+	
+	% --------- NUMÉROTATION ARABE ---------
+	\newpage
+	
+	\pagenumbering{arabic}
+	
+	% --------- CHAPITRES ---------
+	\input{chapitres/introduction}
+	\input{chapitres/01_contexte}
+	\input{chapitres/02_lorawan_lrfhss}
+	\input{chapitres/03_etat_art}
+	\input{chapitres/04_optimisation.tex}
+	\input{chapitres/05_evaluation}
+	\input{chapitres/conclusion}
+	
+	% --------- BIBLIOGRAPHIE ---------
+	\newpage
+	
+	
+	\printbibliography
+	
+	\addcontentsline{toc}{chapter}{RÉFÉRENCES ET BIBLIOGRAPHIE}
+	
+	\newpage
+	
+	% --------- TABLE DES MATIÈRES ---------
+	\cleardoublepage
+	\renewcommand{\contentsname}{TABLE DES MATIÈRES} % Nouveau titre
+	\etocsetnexttocdepth{3}                         % On affiche tout (jusqu'aux subsubsections)
+	\tableofcontents
+	\addcontentsline{toc}{chapter}{TABLE DES MATIÈRES}
+	
+	
+\end{document}

@@ -1,0 +1,921 @@
+% ============================================================
+%  Présentation Beamer — Validation LR-FHSS & Agent DDQN
+%  Suit le cheminement de validation_simple.tex
+% ============================================================
+\documentclass[aspectratio=169, 11pt]{beamer}
+
+% ── Thème de base ───────────────────────────────────────────
+\usetheme{Madrid}
+\usecolortheme{dolphin}
+
+% ── Packages ────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{fontawesome5}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ── Commandes utilitaires ────────────────────────────────────
+\newcommand{\gain}[1]{\textcolor{green!50!black}{\textbf{#1}}}
+\newcommand{\loss}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\neutral}[1]{\textcolor{gray}{#1}}
+\newcommand{\highlight}[1]{\textcolor{blue}{\textbf{#1}}}
+
+\newcommand{\cellgreen}[1]{\cellcolor{green!10}\textcolor{green!50!black}{\textbf{#1}}}
+\newcommand{\cellred}[1]{\cellcolor{red!10}\textcolor{red}{\textbf{#1}}}
+\newcommand{\cellneutral}[1]{\cellcolor{gray!10}{#1}}
+
+% boîte stat compacte
+\newcommand{\statbox}[3]{%
+	\begin{tcolorbox}[
+		colback=#3!10, colframe=#3, boxrule=1pt,
+		left=4pt, right=4pt, top=3pt, bottom=3pt,
+		fonttitle=\bfseries\footnotesize, title=#2,
+		sharp corners
+		]
+		\centering\Large\bfseries\textcolor{#3}{#1}
+	\end{tcolorbox}%
+}
+
+% ── Métadonnées ──────────────────────────────────────────────
+\title[Validation LR-FHSS et DDQN]{%
+	Validation du simulateur LR-FHSS\\
+	et Évaluation de  l'agent DDQN}
+
+\author[]{BAZOUM Marthy Elysée}
+
+\date{\today}
+
+% ============================================================
+\begin{document}
+	% ============================================================
+	
+	% ── DIAPO TITRE ─────────────────────────────────────────────
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	% ── PLAN ────────────────────────────────────────────────────
+	\begin{frame}{Sommaire}
+		\tableofcontents[hideallsubsections]
+	\end{frame}
+	
+	% ============================================================
+	\section{Méthodologie de Validation}
+	% ============================================================
+	
+	\begin{frame}{Méthodologie de Validation}
+		
+		\begin{columns}[T]
+			
+			\column{0.32\textwidth}
+			\begin{block}{Données d'Entrée}
+				\begin{itemize}\small
+					\item Sanchez et al.\ (2025) -- PDR et RSSI réels mesurés
+					\item Puissance TX : \textbf{14 dBm}
+					\item Coding rate et BW conformes au tableau DR
+					\item 4 configurations : DR8 à DR11
+				\end{itemize}
+			\end{block}
+			
+			\column{0.32\textwidth}
+			\begin{block}{ Modèle de Canal}
+				\begin{itemize}\small
+					\item Modèle \textbf{log-distance}
+					\item Exposant : $n = 3{,}3$
+					\item Shadowing : $\sigma_s = 7{,}0\;\text{dB}$
+					\item Perte à la distance de référence \ : $125\;\text{dB}$ à $1\;\text{km}$
+				\end{itemize}
+			\end{block}
+			
+			\column{0.32\textwidth}
+			\begin{block}{Paramètres de simulation}
+				\begin{itemize}\small
+					\item Durée : \textbf{30 min} / simulation
+					\item \textbf{10 nœuds} par configuration
+					\item $400$ paquets par config et par distance.
+					\item \textbf{13 distances} : 139 m $\to$ 4000 m
+				\end{itemize}
+			\end{block}
+			
+		\end{columns}
+		
+		\vspace{0.8em}
+		\begin{tcolorbox}[
+			colback=blue!5, colframe=blue, boxrule=0.8pt,
+			left=6pt, right=6pt, top=4pt, bottom=4pt, sharp corners
+			]
+			\centering\small\textcolor{blue}{%
+				 \textbf{Reproductibilité} garantie par un \textit{seed} global identique
+				(positions, shadowing, évaluation)}
+		\end{tcolorbox}
+		
+	\end{frame}
+	
+	% ============================================================
+	\section{Validation par Data Rate}
+	% ============================================================
+	
+	% ── DR8 ─────────────────────────────────────────────────────
+	\begin{frame}{Validation -- DR8 \quad\small(CR 1/3, BW 136 kHz)}
+		\framesubtitle{Comparaison PDR et RSSI : simulation contre mesures réelles}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{images/validation/sim/dr8_pdr_rssi_vs_distance.png}
+			\caption{DR8 — PDR et RSSI simulés vs mesurés}
+			\label{fig:dr8_val}
+		\end{figure}
+		
+		\begin{columns}[c]
+			\column{0.48\textwidth}
+			\begin{alertblock}{}
+				\centering RMSE PDR : \textbf{10,69\,\%}
+			\end{alertblock}
+			\column{0.48\textwidth}
+			\begin{block}{}
+				\centering RMSE RSSI : \textbf{7,21\,dB}
+			\end{block}
+		\end{columns}
+		
+		\vspace{0.3em}
+		\centering
+		{\small\textcolor{black}{\itshape
+				Bonne adéquation du modèle RSSI. La PDR simulée suit fidèlement la tendance réelle.}}
+	\end{frame}
+	
+	% ── DR9 ─────────────────────────────────────────────────────
+	\begin{frame}{Validation — DR9 \quad\small(CR 2/3, BW 136 kHz)}
+		\framesubtitle{Comparaison PDR et RSSI : simulation vs mesures réelles}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{images/validation/sim/dr9_pdr_rssi_vs_distance.png}
+			\caption{DR9 — PDR et RSSI simulés vs mesurés}
+			\label{fig:dr9_val}
+		\end{figure}
+		
+		\begin{columns}[c]
+			\column{0.48\textwidth}
+			\begin{alertblock}{}
+				\centering RMSE PDR : \textbf{21,40\,\%}
+			\end{alertblock}
+			\column{0.48\textwidth}
+			\begin{block}{}
+				\centering RMSE RSSI : \textbf{6,84\,dB}
+			\end{block}
+		\end{columns}
+		
+		\vspace{0.3em}
+		\centering
+		{\small\textcolor{gray}{\itshape
+				Sensibilité accrue aux conditions de canal. Décroissance plus rapide du PDR avec la distance.}}
+	\end{frame}
+	
+	% ── DR10 ────────────────────────────────────────────────────
+	\begin{frame}{Validation — DR10 \quad\small(CR 1/3, BW 336 kHz)}
+		\framesubtitle{Comparaison PDR et RSSI : simulation vs mesures réelles}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{images/validation/sim/dr10_pdr_rssi_vs_distance.png}
+			\caption{DR10 — PDR et RSSI simulés vs mesurés}
+			\label{fig:dr10_val}
+		\end{figure}
+		
+		\begin{columns}[c]
+			\column{0.48\textwidth}
+			\begin{exampleblock}{}
+				\centering RMSE PDR : \textbf{5,11\,\%}
+			\end{exampleblock}
+			\column{0.48\textwidth}
+			\begin{exampleblock}{}
+				\centering RMSE RSSI : \textbf{5,92\,dB}
+			\end{exampleblock}
+		\end{columns}
+		
+		\centering
+		\vspace{0.3em}
+		{\small\textcolor{gray}{\itshape
+				PDR $> 90\%$ jusqu'à 2000 m. Meilleure précision parmi les 4 DR. Excellent accord simulation/réel.}}
+	\end{frame}
+	
+	% ── DR11 ────────────────────────────────────────────────────
+	\begin{frame}{Validation — DR11 \quad\small(CR 2/3, BW 336 kHz)}
+		\framesubtitle{Comparaison PDR et RSSI : simulation vs mesures réelles}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{images/validation/sim/dr11_pdr_rssi_vs_distance.png}
+			\caption{DR11 — PDR et RSSI simulés vs mesurés}
+			\label{fig:dr11_val}
+		\end{figure}
+		
+		\begin{columns}[c]
+			\column{0.48\textwidth}
+			\begin{alertblock}{}
+				\centering RMSE PDR : \textbf{11,38\,\%}
+			\end{alertblock}
+			\column{0.48\textwidth}
+			\begin{block}{}
+				\centering RMSE RSSI : \textbf{6,28\,dB}
+			\end{block}
+		\end{columns}
+		
+		\centering
+		\vspace{0.3em}
+		{\small\textcolor{gray}{\itshape
+				Chute rapide du PDR à partir de 1500 m, fidèlement reproduite par le simulateur.}}
+	\end{frame}
+	
+	% ============================================================
+	\section{Quantification Globale des Erreurs}
+	% ============================================================
+	
+	% ── Vue globale PDR ─────────────────────────────────────────
+	\begin{frame}{Analyse globale — PDR tous DR}
+		\framesubtitle{Corrélation globale simulation vs données réelles}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{images/validation/sim/all_dr_pdr_vs_distance.png}
+			\caption{Comparaison globale du PDR -- simulation et données mesurées}
+			\label{fig:pdr_global}
+		\end{figure}
+		
+		\centering
+		\begin{tcolorbox}[
+			colback=green!10, colframe=green!50!black, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\small\textcolor{green!50!black}{%
+			Le simulateur reproduit fidèlement : la \textbf{hiérarchie des DR},
+				la \textbf{forme des courbes PDR}.}
+		\end{tcolorbox}
+	\end{frame}
+	
+	% ── Vue globale RSSI ────────────────────────────────────────
+	\begin{frame}{Analyse globale -- RSSI tous DR}
+		\framesubtitle{Adéquation du modèle de propagation log-distance}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{images/validation/sim/all_dr_rssi_vs_distance.png}
+			\caption{Comparaison globale du RSSI moyen}
+			\label{fig:rssi_global}
+		\end{figure}
+		
+		\centering
+		\begin{tcolorbox}[
+			colback=blue!5, colframe=blue, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\small\textcolor{blue}{%
+				Erreur moyenne RSSI : \textbf{6,56 dB} -- valide : exposant $n{=}3{,}3$,
+				perte référence 125 dB/km, shadowing déterministe.}
+		\end{tcolorbox}
+	\end{frame}
+	
+	
+	\begin{frame}{Tableau de synthèse — RMSE }
+		\framesubtitle{Erreurs quadratiques moyennes PDR et RSSI par Data Rate}
+		
+		
+		\begin{table}
+			\centering
+			\renewcommand{\arraystretch}{1.35}
+			\begin{tabular}{|>{\bfseries}c|c|c|}
+				\hline
+				\rowcolor{blue!50}
+				\textcolor{white}{\textbf{Data Rate}} &
+				\textcolor{white}{\textbf{RMSE PDR (\%)}} &
+				\textcolor{white}{\textbf{RMSE RSSI (dB)}} \\
+				\hline
+				DR8  & 10{,}69 & 7{,}21 \\
+				\hline
+				\rowcolor{gray!20}
+				DR9  & \textcolor{red}{\textbf{21{,}40}} & 6{,}84 \\
+				\hline
+				DR10 & \textcolor{green!50!black}{\textbf{5{,}11}} & \textcolor{green!50!black}{\textbf{5{,}92}} \\
+				\hline
+				\rowcolor{gray!20}
+				DR11 & 11{,}38 & 6{,}28 \\
+				\hline\hline
+				\rowcolor{cyan!30}
+				\textbf{Moyenne} & \textbf{12{,}14} & \textbf{6{,}56} \\
+				\hline
+			\end{tabular}
+			\caption{RMSE entre simulation et données réelles — LR-FHSS}
+			\label{tab:validation_errors}
+		\end{table}
+		
+		\vspace{0.2em}
+		\begin{tcolorbox}[
+			colback=green!10, colframe=green!50!black, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\centering\small\textcolor{green!50!black}{%
+				Simulateur validé. Passage à l'évaluation de l'agent DDQN.}
+		\end{tcolorbox}
+	\end{frame}
+	
+	% ============================================================
+	\section{Méthodologie d'évaluation DDQN}
+	% ============================================================
+	
+	\begin{frame}{Protocole d'évaluation de l'agent DDQN}
+		\framesubtitle{Standard contre Agent DDQN — conditions identiques}
+		
+		\begin{columns}[T]
+			
+			\column{0.48\textwidth}
+			\begin{block}{Configuration Standard}
+				\begin{itemize}\small
+					\item DR fixe, puissance fixe à \textbf{14 dBm}
+					\item 30 min · 10 nœuds · 13 distances
+					\item Taille payload = 1 Byte
+					\item Séparé pour chaque DR (DR8--DR11)
+				\end{itemize}
+			\end{block}
+			
+			\vspace{0.4em}
+			\begin{block}{ Configuration DDQN}
+				\begin{itemize}\small
+					\item Sélection \textbf{dynamique} du DR et de la puissance
+					\item Même positions, même seed, même nœuds, même shadowing  que Standard
+					\item Même configuration ,nombre de nœuds, temps simulation, intervalle que standard.
+				\end{itemize}
+			\end{block}
+			
+			\column{0.48\textwidth}
+			\begin{exampleblock}{ Métriques collectées}
+				\begin{itemize}\small
+					\item \textbf{Fiabilité :} PDR
+					\item \textbf{Énergie :}
+					$E_{\text{tx}}$ [mJ] par transmission
+					\item \textbf{Adaptativité :} distribution des choix DR et puissance vs distance
+				\end{itemize}
+			\end{exampleblock}
+		
+		\end{columns}
+	\end{frame}
+	\begin{frame}{Définition de termes}
+			\begin{block}{Définition}
+			\begin{itemize}
+				\item La simulation standard désigne la simulation avec des DR(8/9/10/11) fixe sur toute les distances et une puissance de 14dBm. 
+				\item Les comparaisons globales de DDQN à la simulation \textbf{Standard}, sont des comparaisons des métriques de l'agent DDQN a la moyenne des  résultats obtenu individuellement avec chaque DR (8,9,10,11) et une puissance d’émission a 14 dBm sur chacune de distances (139m-4000m).
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	% ============================================================
+	\section{Résultats — agent DDQN vs simulation standard}
+	% ============================================================
+	
+	% ── Vue globale PDR DDQN ────────────────────────────────────
+	\begin{frame}{Comparaison Globale du PDR}
+		\framesubtitle{Agent DDQN vs Simulation Standard — toutes distances}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.88\textwidth]{images/validation/ddqn/pdr_by_distance.png}
+			\caption{PDR : simulation standard vs agent DDQN}
+			\label{fig:pdr_comparison}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{Apports majeurs de l'agent DDQN}
+		
+		\begin{columns}[c]
+			\column{0.4\textwidth}
+			\begin{exampleblock}{\centering 1753 m}
+				\centering\small \gain{99,2\%} vs 95,7\%\\
+				\textcolor{gray}{\scriptsize +3,5 pts}
+			\end{exampleblock}
+			
+			\begin{exampleblock}{\centering 2816 m}
+				\centering\small \gain{78,4\%} vs 72,6\%\\
+				\textcolor{gray}{\scriptsize +5,8 pts}
+			\end{exampleblock}
+			\column{0.4\textwidth}
+			\begin{exampleblock}{\centering 4000 m}
+				\centering\small \gain{83,7\%} vs 72,4\%\\
+				\textcolor{gray}{\scriptsize\textbf{+11,3 pts (+15,6\%)}}
+			\end{exampleblock}
+		\end{columns}
+	\end{frame}
+	
+	
+	% ── DR8 DDQN ────────────────────────────────────────────────
+	\begin{frame}{Analyse DR8 — Standard vs DDQN}
+		\framesubtitle{CR 1/3 · BW 136 kHz}
+		
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.7\textwidth]{images/validation/ddqn/dr/dr8_pdr_courbes.png}
+				\caption{PDR — DR8}
+			\end{figure}
+		
+		
+		\begin{tcolorbox}[
+			colback=blue!5, colframe=blue, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\small L'agent DDQN atteint des performances \textbf{comparables} à la simulation DR8 à
+			14 dBm, tout en \textbf{réduisant la puissance d'émission} de manière significative.
+		\end{tcolorbox}
+	\end{frame}
+	
+	% ── DR9 DDQN ────────────────────────────────────────────────
+	\begin{frame}{Analyse DR9 — Standard vs DDQN}
+		\framesubtitle{CR 2/3 · BW 136 kHz}
+		
+	
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.7\textwidth]{images/validation/ddqn/dr/dr9_pdr_courbes.png}
+				\caption{PDR — DR9}
+			\end{figure}
+		
+		
+		\begin{tcolorbox}[
+			colback=green!10, colframe=green!50!black, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\small\textcolor{green!50!black}{%
+				Nette supériorité aux longues distances.
+				À 4000 m : \textbf{84\%} (DDQN) vs \textbf{70\%} (standard)
+				\hfill \textbf{+14 pts / +20\%}}
+		\end{tcolorbox}
+	\end{frame}
+	
+	% ── DR10 DDQN ───────────────────────────────────────────────
+	\begin{frame}{Analyse DR10 — Standard vs DDQN}
+		\framesubtitle{CR 1/3 · BW 336 kHz}
+		
+
+
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.7\textwidth]{images/validation/ddqn/dr/dr10_pdr_courbes.png}
+				\caption{PDR — DR10}
+			\end{figure}
+
+		
+		
+		
+		\begin{tcolorbox}[
+			colback=green!10, colframe=green!50!black, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\small\textcolor{green!50!black}{%
+				À 4000 m : \textbf{84\%} (DDQN) vs \textbf{78\%} (standard)
+				\hfill \textbf{+6 pts / +13\%}}
+		\end{tcolorbox}
+	\end{frame}
+	
+	% ── DR11 DDQN ───────────────────────────────────────────────
+	\begin{frame}{Analyse DR11 — Standard vs DDQN}
+		\framesubtitle{CR 2/3 · BW 336 kHz}
+		
+		
+
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.7\textwidth]{images/validation/ddqn/dr/dr11_pdr_courbes.png}
+				\caption{PDR — DR11}
+			\end{figure}
+		
+		
+		\begin{tcolorbox}[
+			colback=green!10, colframe=green!50!black, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\small\textcolor{green!50!black}{%
+				Gain le plus important. À 4000 m : \textbf{84\%} (DDQN) vs \textbf{60\%} (standard)
+				\hfill \textbf{+24 pts / +40\%}}
+		\end{tcolorbox}
+	\end{frame}
+	
+\begin{frame}{Comparaison  de débits}
+\begin{columns}
+	
+\column{0.4\textwidth}
+\centering	Rappel sur les débit \cite{loraalliance2025regional}\\
+	\begin{table}
+		\caption{Correspondance DR et les débits }
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			\rowcolor{blue!50}
+			\color{white}
+			DR & \color{white} BW (khz) & \color{white} CR & \color{white} Débit \\
+			\hline
+			\hline
+			8  & 137& 1/3 & 162 bps\\
+			\hline	
+			9  & 137& 2/3 & 325 bps\\
+			\hline
+			10  & 336 & 1/3 & 162 bps\\
+			\hline
+			11  & 336 & 123 & 325 bps\\
+			\hline
+		\end{tabular}	
+	\end{table}
+\column{0.32\textwidth}
+	\begin{itemize}
+		\item Les DR8/10 ont un débit de \textbf{162 bps} mais sont plus fiables sur les longues distances.
+		\item Les DR9/11 ont un débit de \textbf{325 bps} mais sont moins fiables sur les longues distances.
+	\end{itemize}
+\end{columns}	
+\end{frame}	
+
+\begin{frame}[fragile,allowframebreaks]{Stratégie d'Adaptation — DR et Débit}
+	\framesubtitle{Distribution des Data Rates et débit du DDQN}
+	
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.9\textwidth]{images/validation/ddqn/ddqn_dr_choices.png}
+				\caption{Distribution des DR choisis par l'agent DDQN vs distance}
+				\label{fig:ddqn_dr_choices}
+			\end{figure}
+	
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.9\textwidth]{images/validation/ddqn/debit_brut.png}
+				\caption{Débit du DDQN en fonction de la distance}
+				\label{fig:ddqn_debit}
+			\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{Débit en fonction des distance}
+	\begin{table}[H]
+		\centering
+		\caption{Débit en fonction de la distance pour différentes configurations}
+		\label{tab:debit_distance}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\rowcolor{blue!50}
+			\color{white} \textbf{Distance (m)} & \color{white} \textbf{DR8/10 (bps)} & \color{white} \textbf{DR9/11 (bps)} & \color{white}  \textbf{Moyenne (bps)} & \color{white}\textbf{DDQN (bps)} \\
+			\hline
+			139    & 89,59  & 142,05 & 115,82 & 142,05 \\
+			\hline
+			331    & 89,59  & 142,05 & 115,82 & 140,73 \\
+			\hline
+			775    & 89,59  & 142,05 & 115,82 & 90,11 \\
+			\hline
+			1015-4000 & 89,59  & 142,05 & 115,82  & 89,59 \\
+			\hline
+		\end{tabular}
+	\end{table}
+\begin{itemize}
+	
+	\item À courte distance (139 m), le DDQN atteint son \textbf{débit maximal} de 142,05 bps. Cela s’explique par l’utilisation exclusive du DR9/11 (100\%), qui permet un débit plus élevé.
+	
+	\item À 331 m, le DDQN reste proche du débit maximal (140,73 bps), grâce à une utilisation encore majoritaire du DR9/11(98\%) et DR8/10(2\%).
+	
+	\item À moyenne distance (775 m), le débit du DDQN chute à 90,11 bps. Cela correspond à une transition vers le DR8/10 (99\%) et DR9/11 (1\%), utilisé pour maintenir la fiabilité de la transmission à plus longue distance.
+	
+	\item Sur les longues distances (1015–4000 m), le DDQN utilise exclusivement le DR8/10 (100\%), ce qui explique le débit réduit (89,59 bps). Cette stratégie illustre la capacité de l’agent DDQN à adapter dynamiquement le DR en fonction de la distance pour maximiser la fiabilité au détriment d'un débit élevé.
+	
+	\item En comparaison, la \textbf{moyenne} entre DR8/10 et DR9/11 est de 115,82 bps, mais le DDQN peut dépasser cette moyenne à courte distance grâce à la sélection intelligente du DR le plus performant.
+\end{itemize}
+\end{frame}
+
+	% ============================================================
+	\section{Tableaux Comparatifs}
+	% ============================================================
+	
+	% ── Table PDR ───────────────────────────────────────────────
+	\begin{frame}{Comparaison PDR par Distance}
+		\framesubtitle{Standard vs Agent DDQN — 13 distances (139 m à 4000 m)}
+		
+		\vspace{-0.3em}
+		\begin{table}
+			\centering
+			\renewcommand{\arraystretch}{1.1}
+			\fontsize{6.5}{9}\selectfont
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				\rowcolor{blue!50}
+				\textcolor{white}{\textbf{Distance (m)}} &
+				\textcolor{white}{\textbf{Standard (\%)}} &
+				\textcolor{white}{\textbf{DDQN (\%)}} &
+				\textcolor{white}{\textbf{Variation (pts)}} &
+				\textcolor{white}{\textbf{Taux (\%)}} \\
+				\hline
+				139  & 99,9 & \textbf{100,0} & \cellgreen{+0,1} & \cellgreen{+0,1} \\
+				\hline
+				331  & 99,7 & 99,0  & \cellred{$-$0,7} & \cellred{$-$0,7} \\
+				\hline
+				775  & 99,2 & 99,0  & \cellred{$-$0,2} & \cellred{$-$0,2} \\
+				\hline
+				1015 & 98,7 & \textbf{99,0} & \cellgreen{+0,3} & \cellgreen{+0,3} \\
+				\hline
+				1194 & 97,1 & \textbf{97,7} & \cellgreen{+0,6} & \cellgreen{+0,7} \\
+				\hline
+				1260 & 97,5 & \textbf{98,3} & \cellgreen{+0,8} & \cellgreen{+0,8} \\
+				\hline
+				1300 & 98,6 & \textbf{98,8} & \cellgreen{+0,2} & \cellgreen{+0,2} \\
+				\hline
+				1753 & 95,7 & \textbf{99,2} & \cellgreen{+3,5} & \cellgreen{+3,66} \\
+				\hline
+				1977 & 89,1 & \textbf{92,0} & \cellgreen{+2,9} & \cellgreen{+3,25} \\
+				\hline
+				2000 & 97,1 & \textbf{97,2} & \cellgreen{+0,1} & \cellgreen{+0,1} \\
+				\hline
+				2816 & 72,6 & \textbf{78,4} & \cellgreen{+5,8} & \cellgreen{+7,99} \\
+				\hline
+				3000 & 87,7 & \textbf{93,2} & \cellgreen{+5,5} & \cellgreen{+6,27} \\
+				\hline
+				4000 & 72,4 & \textbf{83,7} & \cellgreen{+11,3} & \cellgreen{+15,6} \\
+				\hline\hline
+				\rowcolor{cyan!30}
+				\textbf{Moyenne} & 92,7 & \textbf{95,0} & \cellgreen{+2,3} & \cellgreen{+2,48} \\
+				\hline
+			\end{tabular}
+			\caption{PDR (\%) — Standard vs DDQN}
+			\label{tab:comparaison_pdr}
+		\end{table}
+		
+	
+				
+			\centering
+			{\footnotesize\textcolor{black}{\textbf{11/13 distances améliorées (85\%) · Gain max : +11,3 pts à 4000 m}}}
+
+	
+	\end{frame}
+	
+	% ── Table Puissance ──────────────────────────────────────────
+	\begin{frame}{Comparaison Puissance d'Émission}
+		\framesubtitle{Réduction de puissance adaptative — agent DDQN vs 14 dBm fixe}
+		
+		\begin{table}
+			\centering
+			\renewcommand{\arraystretch}{1.2}
+			\fontsize{8}{10}\selectfont
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				\rowcolor{blue!50}
+				\textcolor{white}{\textbf{Distance (m)}} &
+				\textcolor{white}{\textbf{Standard (dBm)}} &
+				\textcolor{white}{\textbf{DDQN (dBm)}} &
+				\textcolor{white}{\textbf{Réduction}} \\
+				\hline
+				139  & 14,0 & \textbf{3,0}  & \cellcolor{green!10}\textcolor{green!50!black}{\textbf{78,6\%}} \\
+				\hline
+				331  & 14,0 & \textbf{3,1}  & \cellcolor{green!10}\textcolor{green!50!black}{\textbf{77,9\%}} \\
+				\hline
+				775  & 14,0 & \textbf{7,6}  & \cellcolor{green!10}\textcolor{green!50!black}{\textbf{45,7\%}} \\
+				\hline
+				1015 & 14,0 & 11,1 & \cellcolor{green!10}\textcolor{green!50!black}{\textbf{20,7\%}} \\
+				\hline
+				1194 & 14,0 & 11,9 &\cellcolor{green!10}\textcolor{green!50!black} {15,0\%} \\
+				\hline
+				1260--3000 & 14,0 & 12,0 & \cellcolor{green!10}\textcolor{green!50!black} {14,3}\% \\
+				\hline
+				4000 & 14,0 & 14,0 & 0,0\% \\
+				\hline\hline
+				\rowcolor{cyan!30}
+				\textbf{Moyenne} & 14,0 & \textbf{9,5} &
+				\cellcolor{green!10}\textcolor{green!50!black}{\textbf{$-$32\%}} \\
+				\hline
+			\end{tabular}
+			\caption{Puissance d'émission — Standard vs DDQN}
+			\label{tab:comparaison_puissance}
+		\end{table}
+		
+		\begin{tcolorbox}[
+			colback=green!10, colframe=green!50!black, boxrule=0.8pt,
+			left=6pt, right=6pt, top=3pt, bottom=3pt, sharp corners
+			]
+			\centering
+			\small\textcolor{green!50!black}{
+				Réduction de \textbf{32\%} en moyenne · Jusqu'à \textbf{78,6\%} économisé à 139 m}
+		\end{tcolorbox}
+	\end{frame}
+	
+	% ── Table Énergie ────────────────────────────────────────────
+	\begin{frame}{Comparaison Énergétique}
+		\framesubtitle{Énergie consommée par paquet — Standard vs DDQN}
+		
+		\begin{table}
+			\centering
+			\renewcommand{\arraystretch}{1.15}
+			\fontsize{7.5}{9}\selectfont
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				\rowcolor{blue!50}
+				\textcolor{white}{\textbf{Distance (m)}} &
+				\textcolor{white}{\textbf{Énergie Std (mJ)}} &
+				\textcolor{white}{\textbf{Énergie DDQN (mJ)}} &
+				\textcolor{white}{\textbf{Variation}} \\
+				\hline
+				139  & 76,88 & \textbf{28,81} & \cellgreen{$-$62,5\%} \\
+				\hline
+				331  & 76,92 & \textbf{29,62} & \cellgreen{$-$61,5\%} \\
+				\hline
+				775  & 76,95 & \textbf{61,65} & \cellgreen{$-$19,9\%} \\
+				\hline
+				1015 & 76,91 & 77,14 & \cellneutral{+0,3\%} \\
+				\hline
+				1194 & 76,95 & 81,73 & \cellred{+6,2\%} \\
+				\hline
+				1260 & 76,98 & 82,51 & \cellred{+7,2\%} \\
+				\hline
+				1753 & 76,86 & 82,51 & \cellred{+7,3\%} \\
+				\hline
+				1977 & 76,86 & 82,51 & \cellred{+7,3\%} \\
+				\hline
+				2816 & 76,85 & 82,51 & \cellred{+7,4\%} \\
+				\hline
+				3000 & 77,00 & 82,54 & \cellred{+7,2\%} \\
+				\hline
+				4000 & 77,05 & 94,29 & \cellred{+22,4\%} \\
+				\hline\hline
+				\rowcolor{cyan!30}
+				\textbf{Moyenne} & 76,93 & \textbf{73,14} & \cellgreen{$-$4,9\%} \\
+				\hline
+			\end{tabular}
+			\caption{Énergie par paquet (mJ) — Standard vs DDQN}
+			\label{tab:comparaison_energie}
+		\end{table}
+		
+		{\footnotesize\textcolor{gray}{\itshape
+				Surcoût aux distances intermédiaires compensé par l'amélioration du PDR.
+				+22,4\% à 4000 m $\Rightarrow$ +11,3 pts de PDR (+16\%).}}
+	\end{frame}
+	
+	% ============================================================
+	\section{Synthèse et Conclusion}
+	% ============================================================
+	
+	% ── Synthèse par plage ───────────────────────────────────────
+	\begin{frame}{Synthèse — gains par plage de distance}
+		\framesubtitle{Stratégie adaptative optimale de l'agent DDQN}
+		
+		\begin{table}
+			\centering
+			\renewcommand{\arraystretch}{1.4}
+			\begin{tabular}{|l|c|c|c|c|}
+				\hline
+				\rowcolor{blue!50}
+				\textcolor{white}{\textbf{Plage}} &
+				\textcolor{white}{\textbf{Cas}} &
+				\textcolor{white}{\textbf{$\Delta$PDR (pts)}} &
+				\textcolor{white}{\textbf{$\Delta$Puiss. (dBm)}} &
+				\textcolor{white}{\textbf{$\Delta$Énergie}} \\
+				\hline
+				Courte ($< 1000$ m)      & 3 & \cellred{$-$0,3}  & \cellgreen{$-$9,4}  & \cellgreen{$-$47,9\%} \\
+				\hline
+				Moyenne (1000--2000 m)   & 7 & \cellgreen{+1,1}  & \cellgreen{$-$2,1}  & \cellred{+6,1\%} \\
+				\hline
+				Longue ($> 2000$ m)      & 3 & \cellgreen{+7,5}  & \cellgreen{$-$1,5}  & \cellred{+12,3\%} \\
+				\hline
+			\end{tabular}
+			\caption{Performances DDQN par plage de distance}
+			\label{tab:synthese_plages}
+		\end{table}
+		
+		\vspace{0.5em}
+		\begin{columns}[T]
+			\column{0.32\textwidth}
+			\begin{exampleblock}{\centering\small Courtes distances}
+				\centering\footnotesize Économies massives\\
+				\textbf{$-$47,9\% d'énergie}\\sans impact PDR
+			\end{exampleblock}
+			\column{0.32\textwidth}
+			\begin{block}{\centering\small Dist.\ moyennes}
+				\centering\footnotesize Investissement modéré\\
+				\textbf{+6,1\% énergie}\\pour +1,1 pts PDR
+			\end{block}
+			\column{0.32\textwidth}
+			\begin{exampleblock}{\centering\small Longues distances}
+				\centering\footnotesize Forte fiabilité\\
+				\textbf{+7,5 pts PDR}\\surcoût acceptable
+			\end{exampleblock}
+		\end{columns}
+	\end{frame}
+	
+	% ── Tableau synthèse globale ─────────────────────────────────
+	\begin{frame}{Synthèse globale — gains de l'agent DDQN}
+		\framesubtitle{Toutes distances confondues (139 m -- 4000 m)}
+		
+		\begin{table}
+			\centering
+			\renewcommand{\arraystretch}{1.35}
+			\begin{tabular}{|l|c|c|c|}
+				\hline
+				\rowcolor{blue!50}
+				\textcolor{white}{\textbf{Métrique}} &
+				\textcolor{white}{\textbf{Standard}} &
+				\textcolor{white}{\textbf{DDQN}} &
+				\textcolor{white}{\textbf{Gain}} \\
+				\hline
+				PDR moyen              & 92,7\%    & \textbf{95,0\%}  & \cellgreen{+2,48\%} \\
+				\hline
+				Puissance moyenne      & 14,0 dBm  & \textbf{9,5 dBm} & \cellgreen{$-$32,14\%} \\
+				\hline
+				Énergie moy./paquet    & 76,93 mJ  & \textbf{73,14 mJ}& \cellgreen{$-$4,9\%} \\
+				\hline
+				Énergie minimale       & 76,88 mJ  & \textbf{28,81 mJ}& \cellgreen{$-$62,5\%} \\
+				\hline
+				PDR à 4000 m           & 72,4\%    & \textbf{83,7\%}  & \cellgreen{+15,6\%} \\
+				\hline
+				Cas favorables (PDR)   & 2/13      & \textbf{11/13}   & \cellgreen{84,6\%} \\
+				\hline
+			\end{tabular}
+			\caption{Bilan global des gains — Agent DDQN}
+			\label{tab:synthese_gains}
+		\end{table}
+		
+\end{frame}
+
+\begin{frame}{Mécanismes clés appris par l'agent  DDQN }
+	\textbf{}
+
+			\begin{exampleblock}{Mécanisme 1 : }
+				\textbf{Adaptation de la puissance } : Réductions jusqu'à \textbf{78,6\% } de la puissance de transmission
+			\end{exampleblock}
+	
+			\begin{exampleblock}{Mécanisme 2 : }
+				\textbf{Sélection adaptative du DR} : On passe des DR haut débit (DR9/11) vers DR Bas Débit mais robustes (DR8/10) pour maintenir le PDR sur les longue distance ou conditions difficiles.
+			\end{exampleblock}	
+		
+\end{frame}
+	
+	
+	% ── Conclusion ───────────────────────────────────────────────
+	\begin{frame}[fragile,allowframebreaks]{Conclusion}
+		
+		\begin{columns}[T]
+			\column{0.48\textwidth}
+			\begin{block}{Validation du simulateur}
+				\begin{itemize}
+					\item RMSE PDR moy. \textbf{12,14\%}
+					\item RSSI moy. \textbf{6,56 dB}
+				\end{itemize}
+			\end{block}
+			\vspace{0.2em}
+			\begin{block}{Améliorations PDR}
+				\begin{itemize}
+					\item DDQN améliore le PDR dans \textbf{11/13 cas}
+					\item Gain moyen de \textbf{+2,3 pts} soit 2,48\% d’amélioration relative. 
+				\end{itemize}
+			\end{block}
+			\vspace{0.2em}
+			\begin{block}{Réduction de puissance}
+				\begin{itemize}
+					\item Réduction moyenne de puissance de \textbf{$-$32\%}
+					\item Jusqu'à \textbf{$-$78,6\%} à courte portée
+				\end{itemize}
+			\end{block}
+			
+			\column{0.48\textwidth}
+			\begin{exampleblock}{Gain de fiabilité}
+				\begin{itemize}
+					\item Gain fiabilité de \textbf{+15,6\%} à 4000 m
+					\item 72,4\% $\to$ 83,7\%
+				\end{itemize}
+			\end{exampleblock}
+			\vspace{0.2em}
+			\begin{exampleblock}{Économie d'énergie}
+				\begin{itemize}
+					\item Économie d'énergie de \textbf{$-$4,9\%}
+					\item Jusqu'à \textbf{$-$62,5\%} à courte portée
+				\end{itemize}
+			\end{exampleblock}
+			\vspace{0.2em}
+			\begin{exampleblock}{Stratégie adaptative}
+				\begin{itemize}
+					\item Stratégie adaptative cohérente avec la théorie des communications sans fil
+				\end{itemize}
+			\end{exampleblock}
+		\end{columns}
+
+		
+	\end{frame}
+	
+	% ── Références ───────────────────────────────────────────────
+	\appendix
+	
+	\begin{frame}{Bibliographie}
+		\bibliographystyle{plain}   % ou alpha, unsrt, ieeetr...
+		\bibliography{references}    % ton fichier references.bib
+	\end{frame}
+	
+\end{document}
