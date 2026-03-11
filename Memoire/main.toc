@@ -1,0 +1,121 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\babel@toc {french}{}\relax 
+\contentsline {chapter}{AVANT-PROPOS}{i}{Doc-Start}%
+\contentsline {chapter}{REMERCIEMENTS}{ii}{Doc-Start}%
+\contentsline {chapter}{RÉSUMÉ}{iii}{Doc-Start}%
+\contentsline {chapter}{ABSTRACT}{iv}{Doc-Start}%
+\contentsline {chapter}{SOMMAIRE}{vi}{etoc@tocid.1}%
+\contentsline {chapter}{LISTE DES FIGURES}{vii}{etoc@tocid.1}%
+\contentsline {chapter}{LISTE DES TABLEAUX}{viii}{etoc@tocid.1}%
+\contentsline {chapter}{LISTE DES SIGLES, ACRONYMES ET ABRÉVIATIONS}{ix}{etoc@tocid.1}%
+\contentsline {chapter}{INTRODUCTION GÉNÉRALE}{1}{chapter*.1}%
+\contentsline {chapter}{\numberline {1}CONTEXTE DE L'ÉTUDE}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduction}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Présentation de la structure d'accueil}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Contexte et justification}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Problématique}{3}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Objectifs et méthodologie}{3}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Objectifs}{3}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Méthodologie}{4}{subsection.1.5.2}%
+\contentsline {section}{\numberline {1.6}Conclusion}{4}{section.1.6}%
+\contentsline {chapter}{\numberline {2}LoRaWAN et LR-FHSS}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Évolution de LoRa vers LR-FHSS}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Limites du LoRa}{5}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Origines et objectifs du LR-FHSS}{5}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Différence entre LoRa et LR-FHSS}{6}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Architecture physique du LR-FHSS}{6}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Principe de découpage spectral}{6}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Configurations des débits de données (DR)}{7}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Structure du paquet LR-FHSS}{8}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Anatomie d'une trame physique}{8}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Mécanisme de saut de fréquence}{8}{subsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.2.1}Principe de fonctionnement}{8}{subsubsection.2.4.2.1}%
+\contentsline {subsubsection}{\numberline {2.4.2.2}Périodicité du saut}{9}{subsubsection.2.4.2.2}%
+\contentsline {section}{\numberline {2.5}Calcul du temps d'antenne}{9}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Importance du temps d'antenne}{9}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Formule générale}{10}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Calcul du temps de la charge utile}{11}{subsection.2.5.3}%
+\contentsline {section}{\numberline {2.6}Performances et capacité du LR-FHSS}{11}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Apports théoriques}{11}{subsection.2.6.1}%
+\contentsline {subsubsection}{\numberline {2.6.1.1}Capacité réseau décuplée}{12}{subsubsection.2.6.1.1}%
+\contentsline {subsubsection}{\numberline {2.6.1.2}Robustesse aux interférences}{12}{subsubsection.2.6.1.2}%
+\contentsline {subsection}{\numberline {2.6.2}Validation expérimentale}{12}{subsection.2.6.2}%
+\contentsline {subsubsection}{\numberline {2.6.2.1}Analyses réelles}{12}{subsubsection.2.6.2.1}%
+\contentsline {subsubsection}{\numberline {2.6.2.2}Scénarios satellitaires}{13}{subsubsection.2.6.2.2}%
+\contentsline {subsection}{\numberline {2.6.3}Efficacité énergétique}{14}{subsection.2.6.3}%
+\contentsline {section}{\numberline {2.7}Conclusion}{14}{section.2.7}%
+\contentsline {chapter}{\numberline {3}ÉTAT DE L'ART SUR L'OPTIMISATION DES PERFORMANCES DU LR-FHSS}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Introduction}{15}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Récepteur LR-FHSS amélioré}{15}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Architecture de récepteur augmenté}{15}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Résultats et analyse}{16}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Optimisation des séquences de saut et d'allocation des démodulateurs}{16}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Rétro-ingénierie des séquences pilotes}{16}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Nouvelles familles de séquences optimisées}{17}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Stratégies d'allocation dynamique des démodulateurs}{17}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Résultats et analyse}{17}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Limites de l'approche}{18}{subsection.3.3.5}%
+\contentsline {section}{\numberline {3.4}Pré-compensation Doppler pour liaisons directes vers satellite}{18}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Méthode de pré-compensation par balises Doppler}{18}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Validation sur données réelles}{19}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Résultats obtenus}{19}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Limites de l'approche}{19}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Optimisation par apprentissage et saut de fréquence}{19}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Algorithmes proposés}{20}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Résultats}{20}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Limites et incompatibilités majeures avec le LR-FHSS}{20}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Apport pour notre travail}{21}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Synthèse critique et positionnement de nos travaux}{21}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Conclusion}{22}{section.3.7}%
+\contentsline {chapter}{\numberline {4}PRÉSENTATION ET IMPLÉMENTATION DE LA SOLUTION}{23}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{23}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Problématique et formalisme MDP}{23}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Formulation en processus de décision markovien}{23}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Définition de l'espace d'états $\mathcal {S}$}{24}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Définition de l'espace d'actions $\mathcal {A}$}{25}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Conception de la fonction de récompense}{26}{subsection.4.2.4}%
+\contentsline {subsubsection}{\numberline {4.2.4.1}Analyse des poids relatifs des objectifs de la fonction de récompense}{27}{subsubsection.4.2.4.1}%
+\contentsline {section}{\numberline {4.3}Architecture de l'agent DDQN}{28}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Principe de l'algorithme DDQN}{28}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Architecture du réseau de neurones}{31}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Algorithme et environnement d'entraînement}{32}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Environnement d'apprentissage}{32}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Stratégie d'exploration : $\epsilon $-greedy}{33}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Mécanismes clés de l'apprentissage}{33}{subsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.3.1}Mémoire d’expérience (Replay Buffer)}{34}{subsubsection.4.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.4.3.2}Réseaux cible et principal}{34}{subsubsection.4.4.3.2}%
+\contentsline {subsection}{\numberline {4.4.4}Algorithme d'entraînement complet}{34}{subsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.4.5}Hyperparamètres et courbes d'apprentissage}{35}{subsection.4.4.5}%
+\contentsline {subsubsection}{\numberline {4.4.5.1}Configuration des hyperparamètres}{35}{subsubsection.4.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.4.5.2}Analyse de la convergence}{36}{subsubsection.4.4.5.2}%
+\contentsline {section}{\numberline {4.5}Conclusion}{37}{section.4.5}%
+\contentsline {chapter}{\numberline {5}ÉVALUATION DE LA SOLUTION}{38}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{38}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Outil de simulation développé}{38}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Architecture et composants fondamentaux}{38}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Modélisation du canal de propagation}{38}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Paramètres LR-FHSS implémentés}{41}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}Détection des collisions et évaluation du succès}{42}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}Métriques et reproductibilité}{42}{subsection.5.2.5}%
+\contentsline {subsection}{\numberline {5.2.6}Calcul de l'énergie par paquet}{42}{subsection.5.2.6}%
+\contentsline {subsection}{\numberline {5.2.7}Validation expérimentale}{43}{subsection.5.2.7}%
+\contentsline {subsubsection}{\numberline {5.2.7.1}Méthodologie de validation}{43}{subsubsection.5.2.7.1}%
+\contentsline {subsubsection}{\numberline {5.2.7.2}Analyse comparative par DR}{43}{subsubsection.5.2.7.2}%
+\contentsline {subsubsection}{\numberline {5.2.7.3}Analyse globale et quantification des erreurs}{46}{subsubsection.5.2.7.3}%
+\contentsline {section}{\numberline {5.3}Méthodologie d'évaluation}{47}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Protocole}{47}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Métriques de performance}{48}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Résultats et analyse comparative}{48}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Analyse globale des performances}{48}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Analyse de la stratégie d'adaptation du DDQN}{49}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Analyse comparative détaillée par DR}{50}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Analyse des performances par distance}{55}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}Synthèse des gains apportés par le DDQN}{58}{subsection.5.4.5}%
+\contentsline {section}{\numberline {5.5}Limites et perspectives}{58}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Limites de notre solution}{58}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Perspectives}{59}{subsection.5.5.2}%
+\contentsline {section}{\numberline {5.6}Conclusion}{60}{section.5.6}%
+\contentsline {chapter}{CONCLUSION GÉNÉRALE}{61}{chapter*.43}%
+\contentsline {chapter}{RÉFÉRENCES ET BIBLIOGRAPHIE}{62}{chapter*.43}%
+\contentsline {chapter}{TABLE DES MATIÈRES}{65}{etoc@tocid.2}%

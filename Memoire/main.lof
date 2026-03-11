@@ -1,0 +1,32 @@
+\babel@toc {french}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Illustration des sauts de fréquence LR-FHSS}}{10}{figure.caption.4}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Composition de l'espace d'états $\mathcal {S}$.}}{24}{figure.caption.6}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Comparaison des architectures DQN et DDQN}}{30}{figure.caption.9}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Architecture du réseau DDQN.}}{31}{figure.caption.10}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Déroulement d'un épisode dans l'environnement d'entraînement.}}{32}{figure.caption.11}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Évolution du paramètre d'exploration $\epsilon $.}}{33}{figure.caption.12}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Courbes d'apprentissage de l'agent DDQN}}{37}{figure.caption.14}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Distribution gaussienne de l'ombrage avec $\sigma _s = 7$ dB.}}{40}{figure.caption.16}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Architecture du modèle de l'ombrage déterministe}}{41}{figure.caption.17}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Validation du modèle pour DR8 (CR=1/3, BW=137 kHz)}}{43}{figure.caption.19}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Validation du modèle pour DR9 (CR=2/3, BW=137 kHz)}}{44}{figure.caption.20}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Validation du modèle pour DR10 (CR=1/3, BW=336 kHz)}}{44}{figure.caption.21}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Validation du modèle pour DR11 (CR=2/3, BW=336 kHz)}}{45}{figure.caption.22}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Comparaison globale du PDR : simulation et données mesurées}}{46}{figure.caption.23}%
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Comparaison globale du RSSI moyen}}{46}{figure.caption.24}%
+\contentsline {figure}{\numberline {5.9}{\ignorespaces Comparaison du PDR entre simulation standard et agent DDQN}}{49}{figure.caption.26}%
+\contentsline {figure}{\numberline {5.10}{\ignorespaces Distribution des DR choisis par l'agent DDQN en fonction de la distance}}{49}{figure.caption.27}%
+\contentsline {figure}{\numberline {5.11}{\ignorespaces Évolution du débit résultant du choix de DR}}{50}{figure.caption.28}%
+\contentsline {figure}{\numberline {5.12}{\ignorespaces Comparaison PDR pour DR8 : Standard vs DDQN}}{51}{figure.caption.29}%
+\contentsline {figure}{\numberline {5.13}{\ignorespaces Comparaison RSSI pour DR8 : Standard vs DDQN}}{51}{figure.caption.30}%
+\contentsline {figure}{\numberline {5.14}{\ignorespaces Comparaison PDR pour DR9 : Standard vs DDQN}}{52}{figure.caption.31}%
+\contentsline {figure}{\numberline {5.15}{\ignorespaces Comparaison RSSI pour DR9 : Standard vs DDQN}}{52}{figure.caption.32}%
+\contentsline {figure}{\numberline {5.16}{\ignorespaces Comparaison PDR pour DR10 : Standard vs DDQN}}{53}{figure.caption.33}%
+\contentsline {figure}{\numberline {5.17}{\ignorespaces Comparaison RSSI pour DR10 : Standard vs DDQN}}{53}{figure.caption.34}%
+\contentsline {figure}{\numberline {5.18}{\ignorespaces Comparaison PDR pour DR11 : Standard vs DDQN}}{54}{figure.caption.35}%
+\contentsline {figure}{\numberline {5.19}{\ignorespaces Comparaison RSSI pour DR11 : Standard vs DDQN}}{54}{figure.caption.36}%

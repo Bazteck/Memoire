@@ -1,0 +1,21 @@
+\babel@toc {french}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Configuration des débits de données LR-FHSS (DR8--DR11)}}{7}{table.caption.2}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Structure détaillée d'un paquet LR-FHSS}}{8}{table.caption.3}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Synthèse critique des approches d'optimisation du LR-FHSS}}{22}{table.caption.5}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Description détaillée des composantes de l'espace d'états.}}{25}{table.caption.7}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Poids relatifs individuels des composantes de la récompense}}{28}{table.caption.8}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Hyperparamètres de l'apprentissage DDQN}}{36}{table.caption.13}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Puissance de bruit par débit de données (NF = 6,0 dB)}}{40}{table.caption.15}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Paramètres des débit de données (DR) utilisés}}{41}{table.caption.18}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Erreurs quadratiques moyennes (RMSE) entre la simulation et les données réelles}}{47}{table.caption.25}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces Comparaison du PDR : simulation standard vs agent DDQN}}{55}{table.caption.37}%
+\contentsline {table}{\numberline {5.5}{\ignorespaces Évolution du débit en fonction de la distance}}{55}{table.caption.38}%
+\contentsline {table}{\numberline {5.6}{\ignorespaces Comparaison de la puissance d'émission}}{56}{table.caption.39}%
+\contentsline {table}{\numberline {5.7}{\ignorespaces Comparaison de l'énergie consommée par paquet}}{57}{table.caption.40}%
+\contentsline {table}{\numberline {5.8}{\ignorespaces Synthèse des performances par plage de distance}}{58}{table.caption.41}%
+\contentsline {table}{\numberline {5.9}{\ignorespaces Synthèse globale des gains apportés par l'agent DDQN}}{58}{table.caption.42}%
